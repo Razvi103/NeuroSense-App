@@ -17,6 +17,7 @@ class AnalysisRequest(BaseModel):
 
 
 class SeizureEventOut(BaseModel):
+    id: str = Field(description="Unique event identifier")
     start_time: int = Field(description="Event start in seconds from recording start")
     end_time: int = Field(description="Event end in seconds from recording start")
     channels: list[str] = Field(description="Channel names used for detection")
@@ -34,6 +35,9 @@ class AnalysisResponse(BaseModel):
 class UploadResponse(BaseModel):
     recording_id: str
     file_name: str
+    duration_seconds: float = 0.0
+    channel_count: int = 0
+    sample_rate: int = 0
     message: str = "Upload successful"
 
 

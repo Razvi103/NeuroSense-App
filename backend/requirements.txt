@@ -9,3 +9,5 @@ numpy
 pandas
 pyedflib
 scipy
+sqlalchemy[asyncio]
+aiosqlite

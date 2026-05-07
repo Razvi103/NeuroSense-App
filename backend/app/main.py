@@ -7,7 +7,11 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
 from app.config import settings
+from app.database import init_db
 from app.routers.inference import router as inference_router
+from app.routers.patients import router as patients_router
+from app.routers.recordings import router as recordings_router
+from app.routers.stats import router as stats_router
 from app.services.inference import InferenceService
 
 logging.basicConfig(
@@ -19,6 +23,9 @@ logger = logging.getLogger(__name__)
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
+    await init_db()
+    logger.info("Database initialized")
+
     svc = InferenceService()
     if settings.checkpoint_path.exists():
         svc.load_model(
@@ -51,7 +58,10 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+app.include_router(patients_router)
+app.include_router(recordings_router)
 app.include_router(inference_router)
+app.include_router(stats_router)
 
 
 @app.get("/api/health")
