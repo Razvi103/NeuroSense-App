@@ -38,8 +38,8 @@ export function UploadForm({ patients }: UploadFormProps) {
   };
 
   return (
-    <div className="max-w-2xl space-y-6">
-      <div>
+    <div className="space-y-8 w-full">
+      <div className="max-w-md">
         <Select
           id="patient"
           label="Patient"
@@ -59,6 +59,7 @@ export function UploadForm({ patients }: UploadFormProps) {
         </p>
         <FileDropzone
           accept=".edf"
+          className="w-full py-20"
           onFile={(f) => {
             setFile(f);
             setError("");
@@ -67,12 +68,12 @@ export function UploadForm({ patients }: UploadFormProps) {
       </div>
 
       {error && (
-        <p className="rounded-lg bg-rose-accent/10 border border-rose-accent/20 px-4 py-2.5 text-sm text-rose-accent">
+        <p className="rounded-lg bg-rose-accent/10 border border-rose-accent/20 px-4 py-2.5 text-sm text-rose-accent max-w-md">
           {error}
         </p>
       )}
 
-      <div className="flex gap-3">
+      <div className="flex gap-3 pt-2">
         <Button onClick={handleUpload} disabled={uploading} size="lg">
           {uploading ? (
             <span className="inline-flex items-center gap-2">

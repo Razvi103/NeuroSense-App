@@ -17,8 +17,7 @@ export default async function UploadPage() {
       </div>
       
       <div className="relative z-10 bg-surface rounded-xl border border-border shadow-sm overflow-hidden">
-        <div className="h-2 w-full bg-gradient-to-r from-brand-blue to-brand-teal" />
-        <div className="p-6">
+        <div className="p-8">
           <UploadForm patients={patients} />
         </div>
       </div>

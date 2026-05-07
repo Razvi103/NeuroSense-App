@@ -95,7 +95,10 @@ export function Sidebar({ collapsed, onToggle }: SidebarProps) {
 
       <button
         onClick={onToggle}
-        className="flex h-12 items-center justify-center border-t border-border text-text-muted hover:text-text-secondary transition-colors cursor-pointer"
+        className={cn(
+          "flex h-12 items-center border-t border-border text-text-muted hover:text-text-secondary transition-colors cursor-pointer",
+          collapsed ? "justify-center" : "justify-end px-4"
+        )}
       >
         <svg
           viewBox="0 0 24 24"

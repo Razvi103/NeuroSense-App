@@ -75,8 +75,8 @@ export function FileDropzone({
         "relative flex flex-col items-center justify-center rounded-xl border-2 border-dashed p-10 cursor-pointer",
         "transition-all duration-200",
         isDragging
-          ? "border-text-primary bg-text-primary/5"
-          : "border-border hover:border-text-muted bg-surface",
+          ? "border-brand-blue bg-brand-blue-surface/50"
+          : "border-border hover:border-brand-blue hover:bg-brand-blue-surface/20 bg-surface",
         className,
       )}
     >
@@ -87,11 +87,14 @@ export function FileDropzone({
         onChange={handleChange}
         className="hidden"
       />
-      <div className="mb-3 flex h-12 w-12 items-center justify-center rounded-xl bg-elevated border border-border">
+      <div className={cn(
+        "mb-3 flex h-12 w-12 items-center justify-center rounded-xl border transition-colors",
+        isDragging ? "bg-brand-blue border-brand-blue" : "bg-elevated border-border"
+      )}>
         <svg
           className={cn(
             "h-6 w-6 transition-colors",
-            isDragging ? "text-text-primary" : "text-text-muted",
+            isDragging ? "text-surface" : "text-brand-blue",
           )}
           fill="none"
           viewBox="0 0 24 24"
