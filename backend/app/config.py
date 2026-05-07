@@ -27,7 +27,7 @@ class Settings(BaseSettings):
     batch_size: int = 64
 
     # database
-    database_url: str = f"sqlite+aiosqlite:///{_BACKEND_DIR / 'neurosense.db'}"
+    database_url: str = f"sqlite+aiosqlite:///{_BACKEND_DIR / 'data' / 'neurosense.db'}"
 
     # CORS
     frontend_origin: str = "http://localhost:3000"

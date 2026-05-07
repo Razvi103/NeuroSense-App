@@ -1,7 +1,9 @@
 import type { Patient, Recording, SeizureEvent, EEGData, ChannelData } from "./types";
 import { EEG_CHANNEL_LABELS } from "./constants";
 
-const API_BASE = typeof window === "undefined" ? "http://127.0.0.1:8000/api" : "/api";
+const API_BASE = typeof window === "undefined"
+  ? `${process.env.BACKEND_URL || "http://127.0.0.1:8000"}/api`
+  : "/api";
 
 // Helper to clean messy EDF channel names
 function normalizeChannelName(rawLabel: string): string {

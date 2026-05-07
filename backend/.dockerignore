@@ -1,0 +1,17 @@
+__pycache__
+*.pyc
+*.pyo
+*.egg-info
+.git
+.gitignore
+*.md
+.env*
+.DS_Store
+venv
+.venv
+uploads/
+checkpoints/*.pth
+neurosense.db
+.mypy_cache
+.pytest_cache
+.ruff_cache
