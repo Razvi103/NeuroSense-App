@@ -1,0 +1,11 @@
+fastapi
+uvicorn[standard]
+python-multipart
+pydantic-settings
+torch
+timm
+einops
+numpy
+pandas
+pyedflib
+scipy

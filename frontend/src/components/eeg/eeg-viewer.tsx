@@ -1,12 +1,10 @@
 "use client";
 
 import { useState, useMemo, useCallback } from "react";
-import type { EEGData, SeizureEvent, ConfidenceFrame, Recording, Patient } from "@/lib/types";
-import { EEG_CHANNEL_LABELS } from "@/lib/constants";
+import type { EEGData, SeizureEvent, Recording, Patient } from "@/lib/types";
 import { useEegNavigation } from "@/hooks/use-eeg-navigation";
 import { ChannelCanvas } from "./channel-canvas";
 import { TimelineBar } from "./timeline-bar";
-import { ConfidencePanel } from "./confidence-panel";
 import { ViewerControls } from "./viewer-controls";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -16,7 +14,6 @@ import { cn } from "@/lib/utils";
 interface EegViewerProps {
   eegData: EEGData;
   seizureEvents: SeizureEvent[];
-  confidenceFrames: ConfidenceFrame[];
   recording: Recording;
   patient: Patient;
 }
@@ -26,12 +23,11 @@ type TabId = "predictions" | "ground_truth" | "comparison";
 export function EegViewer({
   eegData,
   seizureEvents,
-  confidenceFrames,
   recording,
   patient,
 }: EegViewerProps) {
   const [visibleChannels, setVisibleChannels] = useState<Set<string>>(
-    () => new Set(EEG_CHANNEL_LABELS),
+    () => new Set(eegData.channels.map((c) => c.label)),
   );
   const [controlsOpen, setControlsOpen] = useState(true);
   const [activeTab, setActiveTab] = useState<TabId>("predictions");
@@ -57,8 +53,8 @@ export function EegViewer({
   }, []);
 
   const showAll = useCallback(() => {
-    setVisibleChannels(new Set(EEG_CHANNEL_LABELS));
-  }, []);
+    setVisibleChannels(new Set(eegData.channels.map((c) => c.label)));
+  }, [eegData.channels]);
 
   const hideAll = useCallback(() => {
     setVisibleChannels(new Set());
@@ -122,16 +118,6 @@ export function EegViewer({
           />
         </div>
 
-        {/* confidence heatmap */}
-        <div className="border-t border-border">
-          <ConfidencePanel
-            frames={confidenceFrames}
-            timeOffset={nav.timeOffset}
-            timeWindow={nav.timeWindow}
-            durationSeconds={eegData.durationSeconds}
-          />
-        </div>
-
         {/* timeline */}
         <div className="border-t border-border bg-surface px-5 py-3">
           <TimelineBar
@@ -165,7 +151,7 @@ export function EegViewer({
           <div className="max-h-48 overflow-y-auto px-5 py-3">
             <EventsTable
               events={activeTab === "ground_truth" ? gtEvents : modelEvents}
-              showConfidence={activeTab !== "ground_truth"}
+              showAttention={activeTab !== "ground_truth"}
               onJump={nav.jumpTo}
               gtEvents={activeTab === "comparison" ? gtEvents : []}
             />
@@ -181,6 +167,7 @@ export function EegViewer({
             onTimeWindowChange={nav.setTimeWindow}
             gain={nav.gain}
             onGainChange={nav.setGain}
+            availableChannels={eegData.channels.map((c) => c.label)}
             visibleChannels={visibleChannels}
             onToggleChannel={toggleChannel}
             onShowAll={showAll}
@@ -194,12 +181,12 @@ export function EegViewer({
 
 function EventsTable({
   events,
-  showConfidence,
+  showAttention,
   onJump,
   gtEvents,
 }: {
   events: SeizureEvent[];
-  showConfidence: boolean;
+  showAttention: boolean;
   onJump: (t: number) => void;
   gtEvents: SeizureEvent[];
 }) {
@@ -219,7 +206,7 @@ function EventsTable({
           <th className="pb-2 font-heading font-medium">End</th>
           <th className="pb-2 font-heading font-medium">Duration</th>
           <th className="pb-2 font-heading font-medium">Channels</th>
-          {showConfidence && <th className="pb-2 font-heading font-medium">Confidence</th>}
+          {showAttention && <th className="pb-2 font-heading font-medium">Attention Weights</th>}
           {gtEvents.length > 0 && <th className="pb-2 font-heading font-medium">GT Match</th>}
           <th className="pb-2" />
         </tr>
@@ -233,15 +220,32 @@ function EventsTable({
               Math.abs(gt.endTime - event.endTime) < 5,
           );
 
+          // Get top 3 channels by attention
+          const topAttention = event.channelAttention 
+            ? Object.entries(event.channelAttention)
+                .sort(([, a], [, b]) => b - a)
+                .slice(0, 3)
+            : [];
+
           return (
             <tr key={event.id} className="border-t border-border/30">
               <td className="py-2 font-mono text-text-secondary">{formatTime(event.startTime)}</td>
               <td className="py-2 font-mono text-text-secondary">{formatTime(event.endTime)}</td>
               <td className="py-2 text-text-secondary">{duration.toFixed(1)}s</td>
               <td className="py-2 text-text-secondary">{event.channels.join(", ")}</td>
-              {showConfidence && (
+              {showAttention && (
                 <td className="py-2">
-                  <ConfidenceBadge value={event.confidence} />
+                  {topAttention.length > 0 ? (
+                    <div className="flex flex-wrap gap-1">
+                      {topAttention.map(([ch, weight]) => (
+                        <span key={ch} className="inline-flex items-center rounded-sm bg-elevated px-1.5 py-0.5 text-[10px] font-medium text-text-secondary border border-border">
+                          {ch}: {(weight * 100).toFixed(1)}%
+                        </span>
+                      ))}
+                    </div>
+                  ) : (
+                    <span className="text-text-muted">N/A</span>
+                  )}
                 </td>
               )}
               {gtEvents.length > 0 && (
@@ -266,21 +270,5 @@ function EventsTable({
         })}
       </tbody>
     </table>
-  );
-}
-
-function ConfidenceBadge({ value }: { value: number }) {
-  const pct = Math.round(value * 100);
-  const color =
-    value >= 0.9
-      ? "text-rose-accent"
-      : value >= 0.7
-        ? "text-amber-accent"
-        : "text-emerald-accent";
-
-  return (
-    <span className={cn("font-mono font-semibold", color)}>
-      {pct}%
-    </span>
   );
 }

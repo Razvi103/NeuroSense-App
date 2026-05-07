@@ -4,7 +4,6 @@ import type {
   SeizureEvent,
   ChannelData,
   EEGData,
-  ConfidenceFrame,
 } from "./types";
 import { EEG_CHANNEL_LABELS } from "./constants";
 
@@ -130,20 +129,20 @@ export const mockRecordings: Recording[] = [
 ];
 
 export const mockSeizureEvents: SeizureEvent[] = [
-  { id: "s1", recordingId: "r1", startTime: 120, endTime: 135, confidence: 0.94, channels: ["F7", "T3", "T5"], type: "model" },
-  { id: "s2", recordingId: "r1", startTime: 450, endTime: 468, confidence: 0.87, channels: ["F7", "T3"], type: "model" },
-  { id: "s3", recordingId: "r1", startTime: 1200, endTime: 1215, confidence: 0.72, channels: ["T3", "T5", "P3"], type: "model" },
-  { id: "s1g", recordingId: "r1", startTime: 118, endTime: 137, confidence: 1.0, channels: ["F7", "T3", "T5"], type: "ground_truth" },
-  { id: "s2g", recordingId: "r1", startTime: 448, endTime: 470, confidence: 1.0, channels: ["F7", "T3"], type: "ground_truth" },
-  { id: "s3g", recordingId: "r1", startTime: 1198, endTime: 1218, confidence: 1.0, channels: ["T3", "T5", "P3", "O1"], type: "ground_truth" },
-  { id: "s4", recordingId: "r2", startTime: 60, endTime: 78, confidence: 0.96, channels: ["Fp1", "F3", "F7"], type: "model" },
-  { id: "s5", recordingId: "r2", startTime: 300, endTime: 320, confidence: 0.91, channels: ["F7", "T3", "T5"], type: "model" },
-  { id: "s6", recordingId: "r2", startTime: 800, endTime: 830, confidence: 0.88, channels: ["T3", "C3", "P3"], type: "model" },
-  { id: "s7", recordingId: "r2", startTime: 1500, endTime: 1518, confidence: 0.65, channels: ["T5", "P3", "O1"], type: "model" },
-  { id: "s8", recordingId: "r2", startTime: 2700, endTime: 2725, confidence: 0.93, channels: ["F7", "T3", "T5", "P3"], type: "model" },
-  { id: "s9", recordingId: "r3", startTime: 900, endTime: 920, confidence: 0.78, channels: ["C3", "C4", "Cz"], type: "model" },
-  { id: "s10", recordingId: "r6", startTime: 200, endTime: 212, confidence: 0.85, channels: ["Fz", "Cz", "Pz"], type: "model" },
-  { id: "s11", recordingId: "r6", startTime: 1100, endTime: 1115, confidence: 0.82, channels: ["Fz", "Cz", "Pz"], type: "model" },
+  { id: "s1", recordingId: "r1", startTime: 120, endTime: 135, channels: ["F7", "T3", "T5"], type: "model", channelAttention: {"F7": 0.45, "T3": 0.35, "T5": 0.20} },
+  { id: "s2", recordingId: "r1", startTime: 450, endTime: 468, channels: ["F7", "T3"], type: "model", channelAttention: {"F7": 0.60, "T3": 0.40} },
+  { id: "s3", recordingId: "r1", startTime: 1200, endTime: 1215, channels: ["T3", "T5", "P3"], type: "model", channelAttention: {"T3": 0.50, "T5": 0.30, "P3": 0.20} },
+  { id: "s1g", recordingId: "r1", startTime: 118, endTime: 137, channels: ["F7", "T3", "T5"], type: "ground_truth" },
+  { id: "s2g", recordingId: "r1", startTime: 448, endTime: 470, channels: ["F7", "T3"], type: "ground_truth" },
+  { id: "s3g", recordingId: "r1", startTime: 1198, endTime: 1218, channels: ["T3", "T5", "P3", "O1"], type: "ground_truth" },
+  { id: "s4", recordingId: "r2", startTime: 60, endTime: 78, channels: ["Fp1", "F3", "F7"], type: "model", channelAttention: {"Fp1": 0.40, "F3": 0.35, "F7": 0.25} },
+  { id: "s5", recordingId: "r2", startTime: 300, endTime: 320, channels: ["F7", "T3", "T5"], type: "model", channelAttention: {"F7": 0.55, "T3": 0.30, "T5": 0.15} },
+  { id: "s6", recordingId: "r2", startTime: 800, endTime: 830, channels: ["T3", "C3", "P3"], type: "model", channelAttention: {"T3": 0.45, "C3": 0.40, "P3": 0.15} },
+  { id: "s7", recordingId: "r2", startTime: 1500, endTime: 1518, channels: ["T5", "P3", "O1"], type: "model", channelAttention: {"T5": 0.50, "P3": 0.30, "O1": 0.20} },
+  { id: "s8", recordingId: "r2", startTime: 2700, endTime: 2725, channels: ["F7", "T3", "T5", "P3"], type: "model", channelAttention: {"F7": 0.35, "T3": 0.30, "T5": 0.20, "P3": 0.15} },
+  { id: "s9", recordingId: "r3", startTime: 900, endTime: 920, channels: ["C3", "C4", "Cz"], type: "model", channelAttention: {"C3": 0.40, "C4": 0.35, "Cz": 0.25} },
+  { id: "s10", recordingId: "r6", startTime: 200, endTime: 212, channels: ["Fz", "Cz", "Pz"], type: "model", channelAttention: {"Fz": 0.45, "Cz": 0.35, "Pz": 0.20} },
+  { id: "s11", recordingId: "r6", startTime: 1100, endTime: 1115, channels: ["Fz", "Cz", "Pz"], type: "model", channelAttention: {"Fz": 0.50, "Cz": 0.30, "Pz": 0.20} },
 ];
 
 function generateEegSignal(
@@ -191,9 +190,20 @@ function generateEegSignal(
 }
 
 export function generateMockEEG(recordingId: string): EEGData {
-  const recording = mockRecordings.find((r) => r.id === recordingId);
+  let recording = mockRecordings.find((r) => r.id === recordingId);
   if (!recording) {
-    throw new Error(`recording ${recordingId} not found`);
+    // Generate a fallback recording object for real backend IDs
+    recording = {
+      id: recordingId,
+      patientId: "p1",
+      fileName: `uploaded_file.edf`,
+      uploadedAt: new Date().toISOString(),
+      durationSeconds: 1800,
+      channelCount: 19,
+      sampleRate: 256,
+      status: "analyzed",
+      seizureCount: 0,
+    };
   }
 
   const events = mockSeizureEvents.filter(
@@ -221,37 +231,4 @@ export function generateMockEEG(recordingId: string): EEGData {
     durationSeconds: recording.durationSeconds,
     startDate: recording.uploadedAt,
   };
-}
-
-export function generateConfidenceTimeline(
-  recordingId: string,
-  durationSeconds: number,
-): ConfidenceFrame[] {
-  const events = mockSeizureEvents.filter(
-    (e) => e.recordingId === recordingId && e.type === "model",
-  );
-
-  const frames: ConfidenceFrame[] = [];
-  for (let t = 0; t < durationSeconds; t++) {
-    let maxConf = 0.02 + Math.random() * 0.05;
-
-    for (const event of events) {
-      if (t >= event.startTime && t <= event.endTime) {
-        maxConf = Math.max(maxConf, event.confidence * (0.85 + Math.random() * 0.15));
-      } else {
-        const distToEvent = Math.min(
-          Math.abs(t - event.startTime),
-          Math.abs(t - event.endTime),
-        );
-        if (distToEvent < 15) {
-          const ramp = event.confidence * 0.3 * Math.exp(-distToEvent / 5);
-          maxConf = Math.max(maxConf, ramp);
-        }
-      }
-    }
-
-    frames.push({ time: t, value: Math.min(1, maxConf) });
-  }
-
-  return frames;
 }

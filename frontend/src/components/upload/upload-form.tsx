@@ -6,6 +6,7 @@ import { Select } from "@/components/ui/select";
 import { Button } from "@/components/ui/button";
 import { FileDropzone } from "@/components/ui/file-dropzone";
 import { Card } from "@/components/ui/card";
+import { uploadRecording, analyzeRecording } from "@/lib/api";
 import type { Patient } from "@/lib/types";
 
 interface UploadFormProps {
@@ -32,9 +33,17 @@ export function UploadForm({ patients }: UploadFormProps) {
     setError("");
     setUploading(true);
 
-    // mock upload delay
-    await new Promise((r) => setTimeout(r, 1500));
-    router.push(`/recordings/r1`);
+    try {
+      const uploadRes = await uploadRecording(file, selectedPatient);
+      const recId = uploadRes.recording_id;
+      
+      await analyzeRecording(recId);
+      
+      router.push(`/recordings/${recId}`);
+    } catch (err: any) {
+      setError(err.message || "Failed to upload or analyze recording");
+      setUploading(false);
+    }
   };
 
   return (

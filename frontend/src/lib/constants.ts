@@ -14,14 +14,14 @@ export const CHANNEL_COLORS = [
   "#4338ca", "#6d28d9", "#be185d",
 ] as const;
 
-export const TIME_WINDOWS = [10, 20, 30, 60] as const;
+export const TIME_WINDOWS = [5, 10, 15, 30] as const;
 
 export const GAIN_PRESETS = [
-  { label: "0.5x", value: 0.5 },
   { label: "1x", value: 1 },
-  { label: "2x", value: 2 },
   { label: "5x", value: 5 },
-  { label: "10x", value: 10 },
+  { label: "25x", value: 25 },
+  { label: "50x", value: 50 },
+  { label: "100x", value: 100 },
 ] as const;
 
 export const EEG_BANDS = {

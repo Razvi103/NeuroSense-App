@@ -30,8 +30,8 @@ export interface SeizureEvent {
   recordingId: string;
   startTime: number;
   endTime: number;
-  confidence: number;
   channels: string[];
+  channelAttention?: Record<string, number>;
   type: "model" | "ground_truth";
 }
 
@@ -48,11 +48,6 @@ export interface EEGData {
   durationSeconds: number;
   startDate?: string;
   patientInfo?: string;
-}
-
-export interface ConfidenceFrame {
-  time: number;
-  value: number;
 }
 
 export interface ViewerState {

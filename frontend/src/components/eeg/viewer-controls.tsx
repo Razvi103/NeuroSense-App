@@ -1,13 +1,14 @@
 "use client";
 
 import { cn } from "@/lib/utils";
-import { TIME_WINDOWS, GAIN_PRESETS, EEG_CHANNEL_LABELS } from "@/lib/constants";
+import { TIME_WINDOWS, GAIN_PRESETS } from "@/lib/constants";
 
 interface ViewerControlsProps {
   timeWindow: number;
   onTimeWindowChange: (tw: number) => void;
   gain: number;
   onGainChange: (g: number) => void;
+  availableChannels: string[];
   visibleChannels: Set<string>;
   onToggleChannel: (label: string) => void;
   onShowAll: () => void;
@@ -19,6 +20,7 @@ export function ViewerControls({
   onTimeWindowChange,
   gain,
   onGainChange,
+  availableChannels,
   visibleChannels,
   onToggleChannel,
   onShowAll,
@@ -85,16 +87,17 @@ export function ViewerControls({
           </div>
         </div>
         <div className="grid grid-cols-3 gap-1">
-          {EEG_CHANNEL_LABELS.map((label) => (
+          {availableChannels.map((label) => (
             <button
               key={label}
               onClick={() => onToggleChannel(label)}
               className={cn(
-                "rounded px-2 py-1 text-xs font-mono transition-colors cursor-pointer border",
+                "rounded px-1 py-1 text-[10px] font-mono transition-colors cursor-pointer border overflow-hidden text-ellipsis whitespace-nowrap",
                 visibleChannels.has(label)
                   ? "bg-elevated text-text-primary border-border"
                   : "text-text-muted/40 border-transparent hover:border-border",
               )}
+              title={label}
             >
               {label}
             </button>

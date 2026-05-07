@@ -11,7 +11,7 @@ interface UseEegNavigationOptions {
 export function useEegNavigation({ durationSeconds, initialTimeWindow = 10 }: UseEegNavigationOptions) {
   const [timeWindow, setTimeWindow] = useState(initialTimeWindow);
   const [timeOffset, setTimeOffset] = useState(0);
-  const [gain, setGain] = useState(1);
+  const [gain, setGain] = useState(25);
 
   const maxOffset = Math.max(0, durationSeconds - timeWindow);
 
@@ -44,7 +44,7 @@ export function useEegNavigation({ durationSeconds, initialTimeWindow = 10 }: Us
         scrollBy(-timeWindow * 0.5);
       } else if (e.key === "ArrowUp") {
         e.preventDefault();
-        setGain((g) => Math.min(g * 1.5, 20));
+        setGain((g) => Math.min(g * 1.5, 500));
       } else if (e.key === "ArrowDown") {
         e.preventDefault();
         setGain((g) => Math.max(g / 1.5, 0.1));
