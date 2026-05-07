@@ -1,10 +1,4 @@
 import type { Patient, Recording, SeizureEvent, EEGData, ChannelData } from "./types";
-import {
-  mockPatients,
-  mockRecordings,
-  mockSeizureEvents,
-  generateMockEEG,
-} from "./mock-data";
 import { EEG_CHANNEL_LABELS } from "./constants";
 
 const API_BASE = typeof window === "undefined" ? "http://127.0.0.1:8000/api" : "/api";
@@ -30,40 +24,85 @@ function normalizeChannelName(rawLabel: string): string {
   return clean;
 }
 
-// mock api layer -- swap these functions with real fetch calls when backend is ready
+// Convert backend snake_case to frontend camelCase
+function mapPatient(p: any): Patient {
+  return {
+    id: p.id,
+    firstName: p.first_name,
+    lastName: p.last_name,
+    dateOfBirth: p.date_of_birth,
+    sex: p.sex,
+    medicalRecordNumber: p.medical_record_number,
+    notes: p.notes,
+    createdAt: p.created_at,
+  };
+}
+
+function mapRecording(r: any): Recording {
+  return {
+    id: r.id,
+    patientId: r.patient_id,
+    fileName: r.file_name,
+    uploadedAt: r.uploaded_at,
+    durationSeconds: r.duration_seconds,
+    channelCount: r.channel_count,
+    sampleRate: r.sample_rate,
+    status: r.status,
+    seizureCount: r.seizure_count,
+  };
+}
 
 export async function getPatients(): Promise<Patient[]> {
-  return mockPatients;
+  const res = await fetch(`${API_BASE}/patients`, { cache: 'no-store' });
+  if (!res.ok) return [];
+  const data = await res.json();
+  return data.map(mapPatient);
 }
 
 export async function getPatient(id: string): Promise<Patient | undefined> {
-  return mockPatients.find((p) => p.id === id);
+  const res = await fetch(`${API_BASE}/patients/${id}`, { cache: 'no-store' });
+  if (!res.ok) return undefined;
+  const data = await res.json();
+  return mapPatient(data);
+}
+
+export async function createPatient(patientData: Omit<Patient, "id" | "createdAt">): Promise<Patient> {
+  const res = await fetch(`${API_BASE}/patients`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      first_name: patientData.firstName,
+      last_name: patientData.lastName,
+      date_of_birth: patientData.dateOfBirth,
+      sex: patientData.sex,
+      medical_record_number: patientData.medicalRecordNumber,
+      notes: patientData.notes,
+    }),
+  });
+  if (!res.ok) throw new Error("Failed to create patient");
+  const data = await res.json();
+  return mapPatient(data);
 }
 
 export async function getRecordings(): Promise<Recording[]> {
-  return mockRecordings;
+  const res = await fetch(`${API_BASE}/recordings`, { cache: 'no-store' });
+  if (!res.ok) return [];
+  const data = await res.json();
+  return data.map(mapRecording);
 }
 
 export async function getRecordingsForPatient(patientId: string): Promise<Recording[]> {
-  return mockRecordings.filter((r) => r.patientId === patientId);
+  const res = await fetch(`${API_BASE}/recordings?patient_id=${patientId}`, { cache: 'no-store' });
+  if (!res.ok) return [];
+  const data = await res.json();
+  return data.map(mapRecording);
 }
 
 export async function getRecording(id: string): Promise<Recording | undefined> {
-  const mock = mockRecordings.find((r) => r.id === id);
-  if (mock) return mock;
-
-  // Fallback for real backend IDs since we don't have a GET /recordings/{id} details endpoint yet.
-  return {
-    id,
-    patientId: "p1", // Default to first patient
-    fileName: `uploaded_file.edf`,
-    uploadedAt: new Date().toISOString(),
-    durationSeconds: 1800, // 30 minutes
-    channelCount: 19,
-    sampleRate: 256,
-    status: "analyzed",
-    seizureCount: 0, // This will be updated by the actual events length if needed
-  };
+  const res = await fetch(`${API_BASE}/recordings/${id}`, { cache: 'no-store' });
+  if (!res.ok) return undefined;
+  const data = await res.json();
+  return mapRecording(data);
 }
 
 export async function uploadRecording(file: File, patientId: string): Promise<{ recording_id: string }> {
@@ -91,8 +130,7 @@ export async function getSeizureEvents(recordingId: string): Promise<SeizureEven
   try {
     const res = await fetch(`${API_BASE}/recordings/${recordingId}/results`, { cache: 'no-store' });
     if (!res.ok) {
-      // fallback to mock if not found in real API
-      return mockSeizureEvents.filter((e) => e.recordingId === recordingId);
+      return [];
     }
     const data = await res.json();
     return data.seizure_events.map((e: any, i: number) => ({
@@ -105,58 +143,57 @@ export async function getSeizureEvents(recordingId: string): Promise<SeizureEven
       type: "model",
     }));
   } catch (err) {
-    // fallback to mock if backend is down
-    return mockSeizureEvents.filter((e) => e.recordingId === recordingId);
+    return [];
   }
 }
 
 export async function getEEGData(recordingId: string): Promise<EEGData> {
-  try {
-    const res = await fetch(
-      `${API_BASE}/recordings/${recordingId}/waveform`,
-      { cache: "no-store" },
-    );
-    if (!res.ok) {
-      return generateMockEEG(recordingId);
-    }
-    const data = await res.json();
-
-    const allowedChannels = new Set(EEG_CHANNEL_LABELS);
-
-    const channels: ChannelData[] = data.channels
-      .map((ch: { label: string; samples: number[]; sample_rate: number; physical_min: number; physical_max: number }) => {
-        return {
-          label: normalizeChannelName(ch.label),
-          samples: new Float32Array(ch.samples),
-          sampleRate: ch.sample_rate,
-          physicalMin: ch.physical_min,
-          physicalMax: ch.physical_max,
-        };
-      })
-      .filter((ch: ChannelData) => allowedChannels.has(ch.label as any));
-
-    return {
-      channels,
-      durationSeconds: data.duration_seconds,
-      startDate: data.start_date ?? undefined,
-      patientInfo: data.patient_info ?? undefined,
-    };
-  } catch {
-    return generateMockEEG(recordingId);
+  const res = await fetch(
+    `${API_BASE}/recordings/${recordingId}/waveform`,
+    { cache: "no-store" },
+  );
+  if (!res.ok) {
+    throw new Error("Failed to fetch waveform data");
   }
+  const data = await res.json();
+
+  const allowedChannels = new Set(EEG_CHANNEL_LABELS);
+
+  const channels: ChannelData[] = data.channels
+    .map((ch: { label: string; samples: number[]; sample_rate: number; physical_min: number; physical_max: number }) => {
+      return {
+        label: normalizeChannelName(ch.label),
+        samples: new Float32Array(ch.samples),
+        sampleRate: ch.sample_rate,
+        physicalMin: ch.physical_min,
+        physicalMax: ch.physical_max,
+      };
+    })
+    .filter((ch: ChannelData) => allowedChannels.has(ch.label as any));
+
+  return {
+    channels,
+    durationSeconds: data.duration_seconds,
+    startDate: data.start_date ?? undefined,
+    patientInfo: data.patient_info ?? undefined,
+  };
 }
 
 export async function getStats() {
-  const patients = await getPatients();
-  const recordings = await getRecordings();
-  const analyzedRecordings = recordings.filter((r) => r.status === "analyzed" || r.status === "flagged");
-  const totalSeizures = analyzedRecordings.reduce((sum, r) => sum + r.seizureCount, 0);
-  const pendingReviews = recordings.filter((r) => r.status === "pending" || r.status === "analyzing").length;
-
+  const res = await fetch(`${API_BASE}/stats`, { cache: 'no-store' });
+  if (!res.ok) {
+    return {
+      totalPatients: 0,
+      totalRecordings: 0,
+      totalSeizures: 0,
+      pendingReviews: 0,
+    };
+  }
+  const data = await res.json();
   return {
-    totalPatients: patients.length,
-    totalRecordings: recordings.length,
-    totalSeizures,
-    pendingReviews,
+    totalPatients: data.total_patients,
+    totalRecordings: data.total_recordings,
+    totalSeizures: data.total_seizures,
+    pendingReviews: data.pending_reviews,
   };
 }
