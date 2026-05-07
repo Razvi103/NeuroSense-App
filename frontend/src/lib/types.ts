@@ -11,7 +11,7 @@ export interface Patient {
   createdAt: string;
 }
 
-export type RecordingStatus = "pending" | "analyzing" | "analyzed" | "flagged";
+export type RecordingStatus = "pending" | "analyzing" | "analyzed" | "no_seizures" | "flagged";
 
 export interface Recording {
   id: string;

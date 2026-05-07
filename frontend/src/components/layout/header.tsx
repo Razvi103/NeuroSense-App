@@ -1,12 +1,12 @@
 "use client";
 
-import { signOut, useSession } from "next-auth/react";
+import { useMsal } from "@azure/msal-react";
 import { Avatar } from "@/components/ui/avatar";
 import { getInitials } from "@/lib/utils";
 import { useState, useRef, useEffect } from "react";
 
 export function Header() {
-  const { data: session } = useSession();
+  const { instance, accounts } = useMsal();
   const [menuOpen, setMenuOpen] = useState(false);
   const menuRef = useRef<HTMLDivElement>(null);
 
@@ -20,11 +20,17 @@ export function Header() {
     return () => document.removeEventListener("mousedown", handleClick);
   }, []);
 
-  const userName = session?.user?.name ?? "User";
+  const account = accounts[0];
+  const userName = account?.name ?? "User";
+  const userEmail = account?.username ?? "";
   const nameParts = userName.split(" ");
   const initials = nameParts.length >= 2
     ? getInitials(nameParts[0], nameParts[nameParts.length - 1])
     : userName.slice(0, 2).toUpperCase();
+
+  const handleSignOut = () => {
+    instance.logoutRedirect({ postLogoutRedirectUri: "/login" });
+  };
 
   return (
     <header className="sticky top-0 z-20 flex h-16 items-center justify-between border-b border-border bg-surface/80 backdrop-blur-xl px-6">
@@ -44,10 +50,10 @@ export function Header() {
           <div className="absolute right-0 top-full mt-2 w-48 rounded-xl border border-border bg-surface p-1.5 shadow-md">
             <div className="px-3 py-2 border-b border-border mb-1">
               <p className="text-sm font-medium text-text-primary font-heading">{userName}</p>
-              <p className="text-xs text-text-muted">{session?.user?.email}</p>
+              <p className="text-xs text-text-muted">{userEmail}</p>
             </div>
             <button
-              onClick={() => signOut({ callbackUrl: "/login" })}
+              onClick={handleSignOut}
               className="flex w-full items-center gap-2 rounded-lg px-3 py-2 text-sm text-text-secondary hover:bg-elevated hover:text-text-primary transition-colors cursor-pointer"
             >
               <svg viewBox="0 0 24 24" fill="none" strokeWidth={1.5} stroke="currentColor" className="h-4 w-4">

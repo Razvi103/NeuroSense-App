@@ -8,9 +8,18 @@ import type { RecordingStatus } from "@/lib/types";
 
 const statusVariant: Record<RecordingStatus, "success" | "warning" | "danger" | "info"> = {
   analyzed: "success",
+  no_seizures: "success",
   pending: "default" as "info",
   analyzing: "info",
   flagged: "danger",
+};
+
+const statusLabel: Record<RecordingStatus, string> = {
+  analyzed: "analyzed",
+  no_seizures: "no seizures",
+  pending: "pending",
+  analyzing: "analyzing",
+  flagged: "flagged",
 };
 
 export default async function DashboardPage() {
@@ -127,10 +136,10 @@ export default async function DashboardPage() {
                       )}
                     </td>
                     <td className="px-5 py-4">
-                      <Badge variant={statusVariant[rec.status]}>{rec.status}</Badge>
+                      <Badge variant={statusVariant[rec.status]}>{statusLabel[rec.status]}</Badge>
                     </td>
                     <td className="px-5 py-4 text-right">
-                      {(rec.status === "analyzed" || rec.status === "flagged") && (
+                      {(rec.status === "analyzed" || rec.status === "no_seizures" || rec.status === "flagged") && (
                         <Link href={`/recordings/${rec.id}`}>
                           <Button variant="ghost" size="sm" className="text-brand-blue hover:text-brand-blue-dark hover:bg-brand-blue-surface hover:underline font-medium">View</Button>
                         </Link>

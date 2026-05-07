@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Outfit, DM_Sans, JetBrains_Mono } from "next/font/google";
+import { MsalProviderWrapper } from "@/components/layout/msal-provider-wrapper";
 import "./globals.css";
 
 const outfit = Outfit({
@@ -35,7 +36,9 @@ export default function RootLayout({
       lang="en"
       className={`${outfit.variable} ${dmSans.variable} ${jetbrainsMono.variable} h-full antialiased light`}
     >
-      <body className="min-h-full bg-base text-text-primary">{children}</body>
+      <body className="min-h-full bg-base text-text-primary">
+        <MsalProviderWrapper>{children}</MsalProviderWrapper>
+      </body>
     </html>
   );
 }

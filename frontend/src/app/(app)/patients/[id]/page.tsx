@@ -10,9 +10,18 @@ import type { RecordingStatus } from "@/lib/types";
 
 const statusVariant: Record<RecordingStatus, "success" | "warning" | "danger" | "info"> = {
   analyzed: "success",
+  no_seizures: "success",
   pending: "info",
   analyzing: "info",
   flagged: "danger",
+};
+
+const statusLabel: Record<RecordingStatus, string> = {
+  analyzed: "analyzed",
+  no_seizures: "no seizures",
+  pending: "pending",
+  analyzing: "analyzing",
+  flagged: "flagged",
 };
 
 export default async function PatientDetailPage({
@@ -93,10 +102,10 @@ export default async function PatientDetailPage({
                       )}
                     </td>
                     <td className="py-3">
-                      <Badge variant={statusVariant[rec.status]}>{rec.status}</Badge>
+                      <Badge variant={statusVariant[rec.status]}>{statusLabel[rec.status]}</Badge>
                     </td>
                     <td className="py-3 text-right">
-                      {(rec.status === "analyzed" || rec.status === "flagged") && (
+                      {(rec.status === "analyzed" || rec.status === "no_seizures" || rec.status === "flagged") && (
                         <Link href={`/recordings/${rec.id}`}>
                           <Button variant="ghost" size="sm" className="text-blue-600 hover:text-blue-800 hover:bg-blue-50 hover:underline">View EEG</Button>
                         </Link>
