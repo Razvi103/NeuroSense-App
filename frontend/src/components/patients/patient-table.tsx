@@ -25,31 +25,31 @@ export function PatientTable({ patients }: PatientTableProps) {
 
   return (
     <div>
-      <div className="mb-4">
+      <div className="mb-6">
         <input
           type="text"
           placeholder="Search patients by name or MRN..."
           value={search}
           onChange={(e) => setSearch(e.target.value)}
-          className="w-full max-w-sm rounded-lg border border-border bg-card px-3.5 py-2.5 text-sm text-text-primary placeholder:text-text-muted focus:outline-none focus:ring-2 focus:ring-cyan-deep/40 focus:border-cyan-deep/50 transition-colors"
+          className="w-full max-w-sm rounded-lg border border-border bg-surface px-4 py-2.5 text-sm text-text-primary placeholder:text-text-muted focus:outline-none focus:ring-2 focus:ring-brand-blue focus:border-transparent transition-colors shadow-sm"
         />
       </div>
-      <div className="overflow-x-auto">
+      <div className="overflow-x-auto -mx-5 -mb-5">
         <table className="w-full text-sm">
           <thead>
-            <tr className="border-b border-border text-left">
-              <th className="pb-3 font-medium text-text-muted font-heading">Patient</th>
-              <th className="pb-3 font-medium text-text-muted font-heading">MRN</th>
-              <th className="pb-3 font-medium text-text-muted font-heading">Age</th>
-              <th className="pb-3 font-medium text-text-muted font-heading">Sex</th>
-              <th className="pb-3 font-medium text-text-muted font-heading">Registered</th>
-              <th className="pb-3" />
+            <tr className="border-b border-border bg-surface text-left">
+              <th className="px-5 py-3 font-medium text-text-muted font-heading">Patient</th>
+              <th className="px-5 py-3 font-medium text-text-muted font-heading">MRN</th>
+              <th className="px-5 py-3 font-medium text-text-muted font-heading">Age</th>
+              <th className="px-5 py-3 font-medium text-text-muted font-heading">Sex</th>
+              <th className="px-5 py-3 font-medium text-text-muted font-heading">Registered</th>
+              <th className="px-5 py-3" />
             </tr>
           </thead>
           <tbody>
             {filtered.map((p) => (
-              <tr key={p.id} className="border-b border-border/50 last:border-0 hover:bg-elevated/50 transition-colors">
-                <td className="py-3">
+              <tr key={p.id} className="border-b border-border/50 last:border-0 hover:bg-brand-blue-surface/30 transition-colors">
+                <td className="px-5 py-4">
                   <div className="flex items-center gap-3">
                     <Avatar initials={getInitials(p.firstName, p.lastName)} size="sm" />
                     <span className="font-medium text-text-primary">
@@ -57,13 +57,13 @@ export function PatientTable({ patients }: PatientTableProps) {
                     </span>
                   </div>
                 </td>
-                <td className="py-3 text-text-secondary font-mono text-xs">{p.medicalRecordNumber}</td>
-                <td className="py-3 text-text-secondary">{getPatientAge(p.dateOfBirth)}</td>
-                <td className="py-3 text-text-secondary capitalize">{p.sex}</td>
-                <td className="py-3 text-text-secondary">{formatDate(p.createdAt)}</td>
-                <td className="py-3 text-right">
+                <td className="px-5 py-4 text-text-secondary font-mono text-xs">{p.medicalRecordNumber}</td>
+                <td className="px-5 py-4 text-text-secondary">{getPatientAge(p.dateOfBirth)}</td>
+                <td className="px-5 py-4 text-text-secondary capitalize">{p.sex}</td>
+                <td className="px-5 py-4 text-text-secondary">{formatDate(p.createdAt)}</td>
+                <td className="px-5 py-4 text-right">
                   <Link href={`/patients/${p.id}`}>
-                    <Button variant="ghost" size="sm" className="text-blue-600 hover:text-blue-800 hover:bg-blue-50 hover:underline">View</Button>
+                    <Button variant="ghost" size="sm" className="text-brand-blue hover:text-brand-blue-dark hover:bg-brand-blue-surface hover:underline font-medium">View</Button>
                   </Link>
                 </td>
               </tr>

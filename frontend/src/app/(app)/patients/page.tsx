@@ -8,10 +8,13 @@ export default async function PatientsPage() {
   const patients = await getPatients();
 
   return (
-    <div className="space-y-6">
-      <div className="flex items-center justify-between">
+    <div className="space-y-6 relative">
+      {/* Decorative background element */}
+      <div className="absolute -top-10 -right-10 w-96 h-96 bg-brand-blue/5 rounded-full blur-3xl pointer-events-none" />
+      
+      <div className="flex items-center justify-between relative z-10">
         <div>
-          <h1 className="text-2xl font-bold text-text-primary font-heading">Patients</h1>
+          <h1 className="text-3xl font-bold text-text-primary font-heading tracking-tight">Patients</h1>
           <p className="mt-1 text-sm text-text-secondary">
             {patients.length} registered patients
           </p>
@@ -25,8 +28,15 @@ export default async function PatientsPage() {
           </Button>
         </Link>
       </div>
-      <Card>
-        <PatientTable patients={patients} />
+      <Card className="relative z-10 overflow-hidden pt-0 px-0 pb-0">
+        <div className="p-5 border-b border-border bg-brand-blue-surface/50">
+          <h2 className="text-lg font-semibold text-brand-blue-dark font-heading">
+            Patient Directory
+          </h2>
+        </div>
+        <div className="p-5">
+          <PatientTable patients={patients} />
+        </div>
       </Card>
     </div>
   );

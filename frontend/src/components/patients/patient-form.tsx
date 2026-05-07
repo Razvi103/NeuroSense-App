@@ -46,7 +46,7 @@ export function PatientForm() {
           id="notes"
           rows={3}
           placeholder="Relevant clinical history..."
-          className="w-full rounded-lg border border-border bg-card px-3.5 py-2.5 text-sm text-text-primary placeholder:text-text-muted focus:outline-none focus:ring-2 focus:ring-cyan-deep/40 focus:border-cyan-deep/50 transition-colors resize-none"
+          className="w-full rounded-lg border border-border bg-surface px-4 py-2.5 text-sm text-text-primary placeholder:text-text-muted focus:outline-none focus:ring-2 focus:ring-brand-blue focus:border-transparent transition-colors resize-none shadow-sm"
         />
       </div>
       <div className="flex gap-3 pt-2">

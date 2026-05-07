@@ -39,7 +39,7 @@ export function UploadForm({ patients }: UploadFormProps) {
 
   return (
     <div className="max-w-2xl space-y-6">
-      <Card>
+      <div>
         <Select
           id="patient"
           label="Patient"
@@ -51,10 +51,10 @@ export function UploadForm({ patients }: UploadFormProps) {
             label: `${p.firstName} ${p.lastName} (${p.medicalRecordNumber})`,
           }))}
         />
-      </Card>
+      </div>
 
-      <Card>
-        <p className="mb-3 text-sm font-medium text-text-secondary font-heading">
+      <div>
+        <p className="mb-3 text-sm font-medium text-text-primary font-heading">
           EEG Recording File
         </p>
         <FileDropzone
@@ -64,7 +64,7 @@ export function UploadForm({ patients }: UploadFormProps) {
             setError("");
           }}
         />
-      </Card>
+      </div>
 
       {error && (
         <p className="rounded-lg bg-rose-accent/10 border border-rose-accent/20 px-4 py-2.5 text-sm text-rose-accent">

@@ -24,10 +24,10 @@ const Input = forwardRef<HTMLInputElement, InputProps>(
           ref={ref}
           id={id}
           className={cn(
-            "w-full rounded-lg border bg-card px-3.5 py-2.5 text-sm text-text-primary",
+            "w-full rounded-lg border bg-surface px-4 py-2.5 text-sm text-text-primary shadow-sm",
             "placeholder:text-text-muted",
             "transition-colors duration-200",
-            "focus:outline-none focus:ring-2 focus:ring-text-primary focus:border-text-primary",
+            "focus:outline-none focus:ring-2 focus:ring-brand-blue focus:border-brand-blue",
             error
               ? "border-rose-accent focus:ring-rose-accent"
               : "border-border hover:border-text-muted",

@@ -50,7 +50,7 @@ export function Sidebar({ collapsed, onToggle }: SidebarProps) {
       )}
     >
       <div className="flex h-16 items-center gap-2.5 border-b border-border px-4">
-        <div className="relative flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-text-primary">
+        <div className="relative flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-gradient-to-br from-brand-blue to-brand-teal shadow-sm">
           <svg
             viewBox="0 0 24 24"
             fill="none"
@@ -78,13 +78,13 @@ export function Sidebar({ collapsed, onToggle }: SidebarProps) {
               className={cn(
                 "flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium transition-all duration-200 border-l-4",
                 isActive
-                  ? "bg-elevated text-text-primary border-text-primary"
+                  ? "bg-brand-blue-surface text-brand-blue-dark border-brand-blue shadow-sm"
                   : "text-text-secondary hover:bg-elevated hover:text-text-primary border-transparent",
                 collapsed && "justify-center px-0 border-l-0",
               )}
               title={collapsed ? item.label : undefined}
             >
-              <span className={cn(isActive && "text-text-primary")}>
+              <span className={cn(isActive && "text-brand-blue")}>
                 {item.icon}
               </span>
               {!collapsed && <span className="font-heading">{item.label}</span>}

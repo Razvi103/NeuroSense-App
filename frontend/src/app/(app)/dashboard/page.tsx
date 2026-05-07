@@ -25,17 +25,20 @@ export default async function DashboardPage() {
     .slice(0, 5);
 
   const statCards = [
-    { label: "Total Patients", value: stats.totalPatients, color: "text-cyan-accent" },
+    { label: "Total Patients", value: stats.totalPatients, color: "text-brand-blue-dark" },
     { label: "Recordings", value: stats.totalRecordings, color: "text-text-primary" },
     { label: "Seizures Detected", value: stats.totalSeizures, color: "text-amber-accent" },
     { label: "Pending Review", value: stats.pendingReviews, color: "text-rose-accent" },
   ];
 
   return (
-    <div className="space-y-6">
-      <div className="flex items-center justify-between">
+    <div className="space-y-8 relative">
+      {/* Decorative background element */}
+      <div className="absolute -top-10 -right-10 w-96 h-96 bg-brand-blue/5 rounded-full blur-3xl pointer-events-none" />
+      
+      <div className="flex items-center justify-between relative z-10">
         <div>
-          <h1 className="text-2xl font-bold text-text-primary font-heading">Dashboard</h1>
+          <h1 className="text-3xl font-bold text-text-primary font-heading tracking-tight">Dashboard</h1>
           <p className="mt-1 text-sm text-text-secondary">
             Overview of patient recordings and analysis results
           </p>
@@ -60,72 +63,76 @@ export default async function DashboardPage() {
         </div>
       </div>
 
-      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
-        {statCards.map((stat) => (
-          <Card key={stat.label} hover>
-            <p className="text-xs font-medium text-text-muted uppercase tracking-wider font-heading">
+      <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-4 relative z-10">
+        {statCards.map((stat, index) => (
+          <Card 
+            key={stat.label} 
+            hover
+            className={index === 0 ? "bg-gradient-to-br from-brand-blue to-brand-teal text-surface border-transparent shadow-md" : ""}
+          >
+            <p className={`text-xs font-medium uppercase tracking-wider font-heading ${index === 0 ? 'text-brand-blue-surface' : 'text-text-muted'}`}>
               {stat.label}
             </p>
-            <p className={`mt-2 text-3xl font-bold font-heading ${stat.color}`}>
+            <p className={`mt-2 text-3xl font-bold font-heading ${index === 0 ? 'text-surface' : stat.color}`}>
               {stat.value}
             </p>
           </Card>
         ))}
       </div>
 
-      <Card>
-        <div className="mb-4 flex items-center justify-between">
-          <h2 className="text-lg font-semibold text-text-primary font-heading">
+      <Card className="relative z-10 overflow-hidden">
+        <div className="mb-0 flex items-center justify-between p-5 border-b border-border bg-brand-blue-surface/50">
+          <h2 className="text-lg font-semibold text-brand-blue-dark font-heading">
             Recent Recordings
           </h2>
-          <Link href="/patients" className="text-sm text-blue-600 hover:text-blue-800 hover:underline font-heading">
+          <Link href="/patients" className="text-sm font-medium text-brand-blue hover:text-brand-blue-dark hover:underline font-heading transition-colors">
             View all patients
           </Link>
         </div>
         <div className="overflow-x-auto">
           <table className="w-full text-sm">
             <thead>
-              <tr className="border-b border-border text-left">
-                <th className="pb-3 font-medium text-text-muted font-heading">Patient</th>
-                <th className="pb-3 font-medium text-text-muted font-heading">File</th>
-                <th className="pb-3 font-medium text-text-muted font-heading">Date</th>
-                <th className="pb-3 font-medium text-text-muted font-heading">Duration</th>
-                <th className="pb-3 font-medium text-text-muted font-heading">Seizures</th>
-                <th className="pb-3 font-medium text-text-muted font-heading">Status</th>
-                <th className="pb-3" />
+              <tr className="border-b border-border bg-surface text-left">
+                <th className="px-5 py-3 font-medium text-text-muted font-heading">Patient</th>
+                <th className="px-5 py-3 font-medium text-text-muted font-heading">File</th>
+                <th className="px-5 py-3 font-medium text-text-muted font-heading">Date</th>
+                <th className="px-5 py-3 font-medium text-text-muted font-heading">Duration</th>
+                <th className="px-5 py-3 font-medium text-text-muted font-heading">Seizures</th>
+                <th className="px-5 py-3 font-medium text-text-muted font-heading">Status</th>
+                <th className="px-5 py-3" />
               </tr>
             </thead>
             <tbody>
               {recentRecordings.map((rec) => {
                 const patient = patients.find((p) => p.id === rec.patientId);
                 return (
-                  <tr key={rec.id} className="border-b border-border/50 last:border-0 hover:bg-elevated/50 transition-colors">
-                    <td className="py-3 text-text-primary font-medium">
+                  <tr key={rec.id} className="border-b border-border/50 last:border-0 hover:bg-brand-blue-surface/30 transition-colors">
+                    <td className="px-5 py-4 text-text-primary font-medium">
                       {patient ? `${patient.firstName} ${patient.lastName}` : "Unknown"}
                     </td>
-                    <td className="py-3 text-text-secondary font-mono text-xs">
+                    <td className="px-5 py-4 text-text-secondary font-mono text-xs">
                       {rec.fileName}
                     </td>
-                    <td className="py-3 text-text-secondary">
+                    <td className="px-5 py-4 text-text-secondary">
                       {formatDate(rec.uploadedAt)}
                     </td>
-                    <td className="py-3 text-text-secondary">
+                    <td className="px-5 py-4 text-text-secondary">
                       {formatDuration(rec.durationSeconds)}
                     </td>
-                    <td className="py-3">
+                    <td className="px-5 py-4">
                       {rec.seizureCount > 0 ? (
                         <span className="text-amber-accent font-semibold">{rec.seizureCount}</span>
                       ) : (
                         <span className="text-text-muted">--</span>
                       )}
                     </td>
-                    <td className="py-3">
+                    <td className="px-5 py-4">
                       <Badge variant={statusVariant[rec.status]}>{rec.status}</Badge>
                     </td>
-                    <td className="py-3 text-right">
+                    <td className="px-5 py-4 text-right">
                       {(rec.status === "analyzed" || rec.status === "flagged") && (
                         <Link href={`/recordings/${rec.id}`}>
-                          <Button variant="ghost" size="sm" className="text-blue-600 hover:text-blue-800 hover:bg-blue-50 hover:underline">View</Button>
+                          <Button variant="ghost" size="sm" className="text-brand-blue hover:text-brand-blue-dark hover:bg-brand-blue-surface hover:underline font-medium">View</Button>
                         </Link>
                       )}
                     </td>

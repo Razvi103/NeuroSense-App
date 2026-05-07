@@ -21,6 +21,11 @@
   --color-border: #e2e8f0;
   --color-border-subtle: #f1f5f9;
 
+  --color-brand-blue: #0693e3;
+  --color-brand-teal: #24b4c9;
+  --color-brand-blue-surface: #f0f7fb;
+  --color-brand-blue-dark: #024b75;
+
   --font-heading: var(--font-outfit);
   --font-body: var(--font-dm-sans);
   --font-mono: var(--font-jetbrains-mono);
