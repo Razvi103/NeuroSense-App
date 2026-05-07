@@ -33,7 +33,7 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={`${outfit.variable} ${dmSans.variable} ${jetbrainsMono.variable} dark h-full antialiased`}
+      className={`${outfit.variable} ${dmSans.variable} ${jetbrainsMono.variable} h-full antialiased light`}
     >
       <body className="min-h-full bg-base text-text-primary">{children}</body>
     </html>

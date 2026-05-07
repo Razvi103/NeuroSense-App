@@ -78,7 +78,7 @@ export default async function DashboardPage() {
           <h2 className="text-lg font-semibold text-text-primary font-heading">
             Recent Recordings
           </h2>
-          <Link href="/patients" className="text-sm text-cyan-accent hover:underline font-heading">
+          <Link href="/patients" className="text-sm text-blue-600 hover:text-blue-800 hover:underline font-heading">
             View all patients
           </Link>
         </div>
@@ -99,7 +99,7 @@ export default async function DashboardPage() {
               {recentRecordings.map((rec) => {
                 const patient = patients.find((p) => p.id === rec.patientId);
                 return (
-                  <tr key={rec.id} className="border-b border-border/50 last:border-0">
+                  <tr key={rec.id} className="border-b border-border/50 last:border-0 hover:bg-elevated/50 transition-colors">
                     <td className="py-3 text-text-primary font-medium">
                       {patient ? `${patient.firstName} ${patient.lastName}` : "Unknown"}
                     </td>
@@ -125,7 +125,7 @@ export default async function DashboardPage() {
                     <td className="py-3 text-right">
                       {(rec.status === "analyzed" || rec.status === "flagged") && (
                         <Link href={`/recordings/${rec.id}`}>
-                          <Button variant="ghost" size="sm">View</Button>
+                          <Button variant="ghost" size="sm" className="text-blue-600 hover:text-blue-800 hover:bg-blue-50 hover:underline">View</Button>
                         </Link>
                       )}
                     </td>

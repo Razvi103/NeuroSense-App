@@ -44,10 +44,10 @@ export function ConfidencePanel({
     const plotW = w - labelWidth;
 
     ctx.clearRect(0, 0, w, h);
-    ctx.fillStyle = "#0d1117";
+    ctx.fillStyle = "#ffffff";
     ctx.fillRect(0, 0, w, h);
 
-    ctx.fillStyle = "#475569";
+    ctx.fillStyle = "#64748b";
     ctx.font = "10px var(--font-jetbrains-mono), monospace";
     ctx.textAlign = "right";
     ctx.fillText("conf", labelWidth - 8, h / 2 + 4);

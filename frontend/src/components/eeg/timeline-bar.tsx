@@ -50,7 +50,7 @@ export function TimelineBar({
           return (
             <div
               key={event.id}
-              className="absolute top-0 h-full bg-amber-accent/20"
+              className="absolute top-0 h-full bg-amber-accent/30"
               style={{ left: `${left}%`, width: `${Math.max(width, 0.3)}%` }}
             />
           );
@@ -62,7 +62,7 @@ export function TimelineBar({
           return (
             <div
               key={event.id}
-              className="absolute top-1 h-1 rounded-full bg-cyan-accent/40"
+              className="absolute top-1 h-1 rounded-full bg-text-primary/60"
               style={{ left: `${left}%`, width: `${Math.max(width, 0.3)}%` }}
             />
           );
@@ -70,8 +70,8 @@ export function TimelineBar({
 
         <div
           className={cn(
-            "absolute top-0 h-full border-x-2 border-cyan-accent/50",
-            "bg-cyan-accent/5",
+            "absolute top-0 h-full border-x-2 border-text-primary/60",
+            "bg-text-primary/5",
           )}
           style={{
             left: `${viewportLeft}%`,

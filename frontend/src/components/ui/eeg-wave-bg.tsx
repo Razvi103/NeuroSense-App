@@ -24,10 +24,10 @@ export function EegWaveBg({ className }: { className?: string }) {
     window.addEventListener("resize", resize);
 
     const lines = [
-      { color: "rgba(6,182,212,0.12)", freq: 0.8, amp: 30, speed: 0.015, yOffset: 0.3 },
-      { color: "rgba(6,182,212,0.08)", freq: 1.2, amp: 20, speed: 0.02, yOffset: 0.45 },
-      { color: "rgba(34,211,238,0.06)", freq: 2.0, amp: 15, speed: 0.025, yOffset: 0.6 },
-      { color: "rgba(6,182,212,0.10)", freq: 0.5, amp: 40, speed: 0.01, yOffset: 0.75 },
+      { color: "rgba(15, 23, 42, 0.2)", freq: 0.8, amp: 30, speed: 0.015, yOffset: 0.3 },
+      { color: "rgba(15, 23, 42, 0.15)", freq: 1.2, amp: 20, speed: 0.02, yOffset: 0.45 },
+      { color: "rgba(71, 85, 105, 0.15)", freq: 2.0, amp: 15, speed: 0.025, yOffset: 0.6 },
+      { color: "rgba(15, 23, 42, 0.1)", freq: 0.5, amp: 40, speed: 0.01, yOffset: 0.75 },
     ];
 
     const draw = () => {

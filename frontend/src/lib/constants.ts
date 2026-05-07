@@ -8,11 +8,10 @@ export const EEG_CHANNEL_LABELS = [
 ] as const;
 
 export const CHANNEL_COLORS = [
-  "#22d3ee", "#38bdf8", "#818cf8", "#a78bfa",
-  "#c084fc", "#e879f9", "#f472b6", "#fb7185",
-  "#f97316", "#facc15", "#a3e635", "#4ade80",
-  "#34d399", "#2dd4bf", "#22d3ee", "#38bdf8",
-  "#818cf8", "#a78bfa", "#c084fc",
+  "#0f172a", "#1d4ed8", "#4338ca", "#6d28d9",
+  "#be185d", "#e11d48", "#b45309", "#0f766e",
+  "#0e7490", "#0369a1", "#0f172a", "#1d4ed8",
+  "#4338ca", "#6d28d9", "#be185d",
 ] as const;
 
 export const TIME_WINDOWS = [10, 20, 30, 60] as const;

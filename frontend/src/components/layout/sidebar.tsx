@@ -50,12 +50,11 @@ export function Sidebar({ collapsed, onToggle }: SidebarProps) {
       )}
     >
       <div className="flex h-16 items-center gap-2.5 border-b border-border px-4">
-        <div className="relative flex h-8 w-8 shrink-0 items-center justify-center">
-          <div className="absolute inset-0 rounded-lg bg-cyan-deep/20 animate-pulse" />
+        <div className="relative flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-text-primary">
           <svg
             viewBox="0 0 24 24"
             fill="none"
-            className="relative h-5 w-5 text-cyan-accent"
+            className="relative h-5 w-5 text-surface"
             strokeWidth={2}
             stroke="currentColor"
           >
@@ -77,15 +76,15 @@ export function Sidebar({ collapsed, onToggle }: SidebarProps) {
               key={item.href}
               href={item.href}
               className={cn(
-                "flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium transition-all duration-200",
+                "flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium transition-all duration-200 border-l-4",
                 isActive
-                  ? "bg-cyan-deep/10 text-cyan-accent shadow-[inset_0_0_0_1px_rgba(6,182,212,0.15)]"
-                  : "text-text-secondary hover:bg-elevated hover:text-text-primary",
-                collapsed && "justify-center px-0",
+                  ? "bg-elevated text-text-primary border-text-primary"
+                  : "text-text-secondary hover:bg-elevated hover:text-text-primary border-transparent",
+                collapsed && "justify-center px-0 border-l-0",
               )}
               title={collapsed ? item.label : undefined}
             >
-              <span className={cn(isActive && "text-cyan-accent")}>
+              <span className={cn(isActive && "text-text-primary")}>
                 {item.icon}
               </span>
               {!collapsed && <span className="font-heading">{item.label}</span>}

@@ -75,7 +75,7 @@ export function FileDropzone({
         "relative flex flex-col items-center justify-center rounded-xl border-2 border-dashed p-10 cursor-pointer",
         "transition-all duration-200",
         isDragging
-          ? "border-cyan-accent bg-cyan-deep/5 shadow-[0_0_40px_rgba(6,182,212,0.08)]"
+          ? "border-text-primary bg-text-primary/5"
           : "border-border hover:border-text-muted bg-surface",
         className,
       )}
@@ -91,7 +91,7 @@ export function FileDropzone({
         <svg
           className={cn(
             "h-6 w-6 transition-colors",
-            isDragging ? "text-cyan-accent" : "text-text-muted",
+            isDragging ? "text-text-primary" : "text-text-muted",
           )}
           fill="none"
           viewBox="0 0 24 24"
@@ -106,7 +106,7 @@ export function FileDropzone({
         </svg>
       </div>
       {fileName ? (
-        <p className="text-sm font-medium text-cyan-accent font-heading">
+        <p className="text-sm font-medium text-text-primary font-heading">
           {fileName}
         </p>
       ) : (

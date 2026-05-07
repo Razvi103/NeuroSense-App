@@ -36,10 +36,10 @@ export function ViewerControls({
               key={tw}
               onClick={() => onTimeWindowChange(tw)}
               className={cn(
-                "rounded-md px-2.5 py-1.5 text-xs font-medium transition-colors cursor-pointer font-heading",
+                "rounded-md px-2.5 py-1.5 text-xs font-medium transition-colors cursor-pointer font-heading border",
                 timeWindow === tw
-                  ? "bg-cyan-deep/15 text-cyan-accent border border-cyan-deep/30"
-                  : "bg-elevated text-text-secondary hover:text-text-primary border border-transparent",
+                  ? "bg-text-primary text-surface border-text-primary"
+                  : "bg-surface text-text-secondary hover:text-text-primary border-border hover:border-text-muted",
               )}
             >
               {tw}s
@@ -58,10 +58,10 @@ export function ViewerControls({
               key={preset.value}
               onClick={() => onGainChange(preset.value)}
               className={cn(
-                "rounded-md px-2.5 py-1.5 text-xs font-medium transition-colors cursor-pointer font-heading",
+                "rounded-md px-2.5 py-1.5 text-xs font-medium transition-colors cursor-pointer font-heading border",
                 Math.abs(gain - preset.value) < 0.01
-                  ? "bg-cyan-deep/15 text-cyan-accent border border-cyan-deep/30"
-                  : "bg-elevated text-text-secondary hover:text-text-primary border border-transparent",
+                  ? "bg-text-primary text-surface border-text-primary"
+                  : "bg-surface text-text-secondary hover:text-text-primary border-border hover:border-text-muted",
               )}
             >
               {preset.label}
@@ -76,10 +76,10 @@ export function ViewerControls({
             Channels
           </h4>
           <div className="flex gap-2">
-            <button onClick={onShowAll} className="text-xs text-cyan-accent hover:underline cursor-pointer">
+            <button onClick={onShowAll} className="text-xs text-blue-600 hover:underline hover:text-blue-800 cursor-pointer">
               all
             </button>
-            <button onClick={onHideAll} className="text-xs text-text-muted hover:underline cursor-pointer">
+            <button onClick={onHideAll} className="text-xs text-text-muted hover:underline hover:text-text-secondary cursor-pointer">
               none
             </button>
           </div>
@@ -90,10 +90,10 @@ export function ViewerControls({
               key={label}
               onClick={() => onToggleChannel(label)}
               className={cn(
-                "rounded px-2 py-1 text-xs font-mono transition-colors cursor-pointer",
+                "rounded px-2 py-1 text-xs font-mono transition-colors cursor-pointer border",
                 visibleChannels.has(label)
-                  ? "bg-elevated text-text-primary"
-                  : "text-text-muted/40",
+                  ? "bg-elevated text-text-primary border-border"
+                  : "text-text-muted/40 border-transparent hover:border-border",
               )}
             >
               {label}

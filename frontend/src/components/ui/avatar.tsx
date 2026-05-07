@@ -17,8 +17,8 @@ export function Avatar({ initials, className, size = "md" }: AvatarProps) {
     <div
       className={cn(
         "inline-flex items-center justify-center rounded-full",
-        "bg-cyan-deep/15 text-cyan-accent font-semibold font-heading",
-        "border border-cyan-deep/20",
+        "bg-elevated text-text-primary font-semibold font-heading",
+        "border border-border",
         sizeStyles[size],
         className,
       )}

@@ -43,12 +43,11 @@ export default function LoginPage() {
       <div className="relative z-10 w-full max-w-md px-6">
         <div className="mb-10 text-center">
           <div className="mb-4 inline-flex items-center gap-2.5">
-            <div className="relative flex h-10 w-10 items-center justify-center">
-              <div className="absolute inset-0 rounded-lg bg-cyan-deep/20 animate-pulse" />
+            <div className="relative flex h-10 w-10 items-center justify-center rounded-lg bg-text-primary">
               <svg
                 viewBox="0 0 24 24"
                 fill="none"
-                className="relative h-6 w-6 text-cyan-accent"
+                className="relative h-6 w-6 text-surface"
                 strokeWidth={2}
                 stroke="currentColor"
               >
@@ -70,7 +69,7 @@ export default function LoginPage() {
 
         <form
           onSubmit={handleSubmit}
-          className="rounded-2xl border border-border bg-card/80 backdrop-blur-xl p-8 shadow-2xl shadow-black/20"
+          className="rounded-2xl border border-border bg-surface p-8 shadow-sm"
         >
           <h2 className="mb-6 text-lg font-semibold text-text-primary font-heading">
             Sign in to your account

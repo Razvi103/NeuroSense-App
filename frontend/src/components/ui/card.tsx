@@ -10,7 +10,7 @@ export function Card({ className, hover, children, ...props }: CardProps) {
     <div
       className={cn(
         "rounded-xl border border-border bg-card p-5",
-        hover && "transition-all duration-200 hover:border-cyan-deep/20 hover:shadow-[0_0_30px_rgba(6,182,212,0.05)]",
+        hover && "transition-all duration-200 hover:shadow-md hover:border-border-subtle",
         className,
       )}
       {...props}

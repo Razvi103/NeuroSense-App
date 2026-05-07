@@ -55,14 +55,14 @@ export function ChannelCanvas({
     ctx.clearRect(0, 0, w, h);
 
     // background
-    ctx.fillStyle = "#0d1117";
+    ctx.fillStyle = "#ffffff";
     ctx.fillRect(0, 0, w, h);
 
     // time gridlines
     const secondsPerGrid = timeWindow <= 10 ? 1 : timeWindow <= 30 ? 2 : 5;
     const startSecond = Math.ceil(timeOffset / secondsPerGrid) * secondsPerGrid;
 
-    ctx.strokeStyle = "rgba(30, 41, 59, 0.6)";
+    ctx.strokeStyle = "rgba(226, 232, 240, 0.8)";
     ctx.lineWidth = 1;
     ctx.setLineDash([]);
 
@@ -73,14 +73,14 @@ export function ChannelCanvas({
       ctx.lineTo(x, h);
       ctx.stroke();
 
-      ctx.fillStyle = "#475569";
+      ctx.fillStyle = "#64748b";
       ctx.font = "10px var(--font-jetbrains-mono), monospace";
       ctx.textAlign = "center";
       ctx.fillText(`${t.toFixed(0)}s`, x, h - 4);
     }
 
     // channel separator lines
-    ctx.strokeStyle = "rgba(30, 41, 59, 0.3)";
+    ctx.strokeStyle = "rgba(226, 232, 240, 0.5)";
     for (let i = 1; i < numChannels; i++) {
       const y = i * channelHeight;
       ctx.beginPath();
@@ -94,9 +94,9 @@ export function ChannelCanvas({
       if (event.endTime < timeOffset || event.startTime > timeOffset + timeWindow) continue;
       const x1 = labelWidth + Math.max(0, (event.startTime - timeOffset) / timeWindow) * plotW;
       const x2 = labelWidth + Math.min(1, (event.endTime - timeOffset) / timeWindow) * plotW;
-      ctx.fillStyle = "rgba(245, 158, 11, 0.08)";
+      ctx.fillStyle = "rgba(217, 119, 6, 0.15)";
       ctx.fillRect(x1, 0, x2 - x1, h);
-      ctx.strokeStyle = "rgba(245, 158, 11, 0.3)";
+      ctx.strokeStyle = "rgba(217, 119, 6, 0.4)";
       ctx.lineWidth = 1;
       ctx.strokeRect(x1, 0, x2 - x1, h);
     }
@@ -106,7 +106,7 @@ export function ChannelCanvas({
       if (event.endTime < timeOffset || event.startTime > timeOffset + timeWindow) continue;
       const x1 = labelWidth + Math.max(0, (event.startTime - timeOffset) / timeWindow) * plotW;
       const x2 = labelWidth + Math.min(1, (event.endTime - timeOffset) / timeWindow) * plotW;
-      ctx.strokeStyle = "rgba(34, 211, 238, 0.4)";
+      ctx.strokeStyle = "rgba(15, 23, 42, 0.6)";
       ctx.lineWidth = 2;
       ctx.setLineDash([4, 4]);
       ctx.strokeRect(x1, 2, x2 - x1, h - 4);
@@ -119,7 +119,7 @@ export function ChannelCanvas({
       const color = CHANNEL_COLORS[channels.indexOf(channel) % CHANNEL_COLORS.length];
 
       // label
-      ctx.fillStyle = "#94a3b8";
+      ctx.fillStyle = "#475569";
       ctx.font = "11px var(--font-jetbrains-mono), monospace";
       ctx.textAlign = "right";
       ctx.fillText(channel.label, labelWidth - 8, yCenter + 4);

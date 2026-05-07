@@ -154,7 +154,7 @@ export function EegViewer({
                 className={cn(
                   "px-4 py-2.5 text-xs font-medium font-heading transition-colors cursor-pointer",
                   activeTab === tab.id
-                    ? "text-cyan-accent border-b-2 border-cyan-accent"
+                    ? "text-text-primary border-b-2 border-text-primary"
                     : "text-text-muted hover:text-text-secondary",
                 )}
               >
@@ -256,7 +256,7 @@ function EventsTable({
               <td className="py-2 text-right">
                 <button
                   onClick={() => onJump(event.startTime)}
-                  className="text-cyan-accent hover:underline cursor-pointer"
+                  className="text-blue-600 hover:text-blue-800 hover:underline cursor-pointer"
                 >
                   jump
                 </button>

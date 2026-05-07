@@ -27,10 +27,10 @@ const Input = forwardRef<HTMLInputElement, InputProps>(
             "w-full rounded-lg border bg-card px-3.5 py-2.5 text-sm text-text-primary",
             "placeholder:text-text-muted",
             "transition-colors duration-200",
-            "focus:outline-none focus:ring-2 focus:ring-cyan-deep/40 focus:border-cyan-deep/50",
+            "focus:outline-none focus:ring-2 focus:ring-text-primary focus:border-text-primary",
             error
-              ? "border-rose-accent/50 focus:ring-rose-accent/30"
-              : "border-border hover:border-border/80",
+              ? "border-rose-accent focus:ring-rose-accent"
+              : "border-border hover:border-text-muted",
             className,
           )}
           {...props}

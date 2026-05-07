@@ -7,23 +7,27 @@ interface BadgeProps extends HTMLAttributes<HTMLSpanElement> {
   variant?: BadgeVariant;
 }
 
-const variantStyles: Record<BadgeVariant, string> = {
-  default: "bg-elevated text-text-secondary border-border",
-  success: "bg-emerald-accent/10 text-emerald-accent border-emerald-accent/20",
-  warning: "bg-amber-accent/10 text-amber-accent border-amber-accent/20",
-  danger: "bg-rose-accent/10 text-rose-accent border-rose-accent/20",
-  info: "bg-cyan-deep/10 text-cyan-accent border-cyan-deep/20",
+const variantStyles: Record<BadgeVariant, { dot: string; text: string }> = {
+  default: { dot: "bg-text-muted", text: "border-border" },
+  success: { dot: "bg-emerald-accent", text: "border-border" },
+  warning: { dot: "bg-amber-accent", text: "border-border" },
+  danger: { dot: "bg-rose-accent", text: "border-border" },
+  info: { dot: "bg-text-primary", text: "border-border" },
 };
 
-export function Badge({ className, variant = "default", ...props }: BadgeProps) {
+export function Badge({ className, variant = "default", children, ...props }: BadgeProps) {
+  const styles = variantStyles[variant];
   return (
     <span
       className={cn(
-        "inline-flex items-center rounded-md border px-2 py-0.5 text-xs font-medium font-heading",
-        variantStyles[variant],
+        "inline-flex items-center gap-1.5 rounded-md border bg-surface px-2 py-0.5 text-xs font-medium text-text-primary font-heading",
+        styles.text,
         className,
       )}
       {...props}
-    />
+    >
+      <span className={cn("h-1.5 w-1.5 rounded-full", styles.dot)} aria-hidden="true" />
+      {children}
+    </span>
   );
 }

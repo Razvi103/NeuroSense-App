@@ -48,7 +48,7 @@ export function PatientTable({ patients }: PatientTableProps) {
           </thead>
           <tbody>
             {filtered.map((p) => (
-              <tr key={p.id} className="border-b border-border/50 last:border-0">
+              <tr key={p.id} className="border-b border-border/50 last:border-0 hover:bg-elevated/50 transition-colors">
                 <td className="py-3">
                   <div className="flex items-center gap-3">
                     <Avatar initials={getInitials(p.firstName, p.lastName)} size="sm" />
@@ -63,7 +63,7 @@ export function PatientTable({ patients }: PatientTableProps) {
                 <td className="py-3 text-text-secondary">{formatDate(p.createdAt)}</td>
                 <td className="py-3 text-right">
                   <Link href={`/patients/${p.id}`}>
-                    <Button variant="ghost" size="sm">View</Button>
+                    <Button variant="ghost" size="sm" className="text-blue-600 hover:text-blue-800 hover:bg-blue-50 hover:underline">View</Button>
                   </Link>
                 </td>
               </tr>

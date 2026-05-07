@@ -41,7 +41,7 @@ export function Header() {
         </button>
 
         {menuOpen && (
-          <div className="absolute right-0 top-full mt-2 w-48 rounded-xl border border-border bg-card p-1.5 shadow-xl shadow-black/20">
+          <div className="absolute right-0 top-full mt-2 w-48 rounded-xl border border-border bg-surface p-1.5 shadow-md">
             <div className="px-3 py-2 border-b border-border mb-1">
               <p className="text-sm font-medium text-text-primary font-heading">{userName}</p>
               <p className="text-xs text-text-muted">{session?.user?.email}</p>

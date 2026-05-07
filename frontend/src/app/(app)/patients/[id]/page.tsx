@@ -80,7 +80,7 @@ export default async function PatientDetailPage({
               </thead>
               <tbody>
                 {recordings.map((rec) => (
-                  <tr key={rec.id} className="border-b border-border/50 last:border-0">
+                  <tr key={rec.id} className="border-b border-border/50 last:border-0 hover:bg-elevated/50 transition-colors">
                     <td className="py-3 text-text-primary font-mono text-xs">{rec.fileName}</td>
                     <td className="py-3 text-text-secondary">{formatDate(rec.uploadedAt)}</td>
                     <td className="py-3 text-text-secondary">{formatDuration(rec.durationSeconds)}</td>
@@ -98,7 +98,7 @@ export default async function PatientDetailPage({
                     <td className="py-3 text-right">
                       {(rec.status === "analyzed" || rec.status === "flagged") && (
                         <Link href={`/recordings/${rec.id}`}>
-                          <Button variant="ghost" size="sm">View EEG</Button>
+                          <Button variant="ghost" size="sm" className="text-blue-600 hover:text-blue-800 hover:bg-blue-50 hover:underline">View EEG</Button>
                         </Link>
                       )}
                     </td>
