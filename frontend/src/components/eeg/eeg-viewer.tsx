@@ -9,7 +9,6 @@ import { ViewerControls } from "./viewer-controls";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { formatTime, formatDuration } from "@/lib/utils";
-import { cn } from "@/lib/utils";
 
 interface EegViewerProps {
   eegData: EEGData;
@@ -17,8 +16,6 @@ interface EegViewerProps {
   recording: Recording;
   patient: Patient;
 }
-
-type TabId = "predictions" | "ground_truth" | "comparison";
 
 export function EegViewer({
   eegData,
@@ -30,16 +27,11 @@ export function EegViewer({
     () => new Set(eegData.channels.map((c) => c.label)),
   );
   const [controlsOpen, setControlsOpen] = useState(true);
-  const [activeTab, setActiveTab] = useState<TabId>("predictions");
 
   const nav = useEegNavigation({ durationSeconds: eegData.durationSeconds });
 
   const modelEvents = useMemo(
     () => seizureEvents.filter((e) => e.type === "model"),
-    [seizureEvents],
-  );
-  const gtEvents = useMemo(
-    () => seizureEvents.filter((e) => e.type === "ground_truth"),
     [seizureEvents],
   );
 
@@ -59,15 +51,6 @@ export function EegViewer({
   const hideAll = useCallback(() => {
     setVisibleChannels(new Set());
   }, []);
-
-  const tabs: { id: TabId; label: string }[] = [
-    { id: "predictions", label: "Model Predictions" },
-    { id: "ground_truth", label: "Ground Truth" },
-    { id: "comparison", label: "Comparison" },
-  ];
-
-  const displayedEvents = activeTab === "ground_truth" ? [] : modelEvents;
-  const displayedGt = activeTab === "predictions" ? [] : gtEvents;
 
   return (
     <div className="flex h-full gap-0">
@@ -112,8 +95,7 @@ export function EegViewer({
             timeOffset={nav.timeOffset}
             timeWindow={nav.timeWindow}
             gain={nav.gain}
-            seizureEvents={displayedEvents}
-            groundTruthEvents={displayedGt}
+            seizureEvents={modelEvents}
             onTimeClick={(t) => nav.jumpTo(t)}
           />
         </div>
@@ -125,36 +107,19 @@ export function EegViewer({
             timeOffset={nav.timeOffset}
             timeWindow={nav.timeWindow}
             seizureEvents={modelEvents}
-            groundTruthEvents={gtEvents}
             onSeek={nav.jumpTo}
           />
         </div>
 
-        {/* bottom panel with tabs */}
+        {/* events panel */}
         <div className="border-t border-border bg-surface">
           <div className="flex border-b border-border">
-            {tabs.map((tab) => (
-              <button
-                key={tab.id}
-                onClick={() => setActiveTab(tab.id)}
-                className={cn(
-                  "px-4 py-2.5 text-xs font-medium font-heading transition-colors cursor-pointer",
-                  activeTab === tab.id
-                    ? "text-text-primary border-b-2 border-text-primary"
-                    : "text-text-muted hover:text-text-secondary",
-                )}
-              >
-                {tab.label}
-              </button>
-            ))}
+            <span className="px-4 py-2.5 text-xs font-medium font-heading text-text-primary border-b-2 border-text-primary">
+              Detected Seizures
+            </span>
           </div>
           <div className="max-h-48 overflow-y-auto px-5 py-3">
-            <EventsTable
-              events={activeTab === "ground_truth" ? gtEvents : modelEvents}
-              showAttention={activeTab !== "ground_truth"}
-              onJump={nav.jumpTo}
-              gtEvents={activeTab === "comparison" ? gtEvents : []}
-            />
+            <EventsTable events={modelEvents} onJump={nav.jumpTo} />
           </div>
         </div>
       </div>
@@ -181,14 +146,10 @@ export function EegViewer({
 
 function EventsTable({
   events,
-  showAttention,
   onJump,
-  gtEvents,
 }: {
   events: SeizureEvent[];
-  showAttention: boolean;
   onJump: (t: number) => void;
-  gtEvents: SeizureEvent[];
 }) {
   if (events.length === 0) {
     return (
@@ -206,22 +167,14 @@ function EventsTable({
           <th className="pb-2 font-heading font-medium">End</th>
           <th className="pb-2 font-heading font-medium">Duration</th>
           <th className="pb-2 font-heading font-medium">Channels</th>
-          {showAttention && <th className="pb-2 font-heading font-medium">Attention Weights</th>}
-          {gtEvents.length > 0 && <th className="pb-2 font-heading font-medium">GT Match</th>}
+          <th className="pb-2 font-heading font-medium">Attention Weights</th>
           <th className="pb-2" />
         </tr>
       </thead>
       <tbody>
         {events.map((event) => {
           const duration = event.endTime - event.startTime;
-          const matchedGt = gtEvents.find(
-            (gt) =>
-              Math.abs(gt.startTime - event.startTime) < 5 &&
-              Math.abs(gt.endTime - event.endTime) < 5,
-          );
-
-          // Get top 3 channels by attention
-          const topAttention = event.channelAttention 
+          const topAttention = event.channelAttention
             ? Object.entries(event.channelAttention)
                 .sort(([, a], [, b]) => b - a)
                 .slice(0, 3)
@@ -233,30 +186,19 @@ function EventsTable({
               <td className="py-2 font-mono text-text-secondary">{formatTime(event.endTime)}</td>
               <td className="py-2 text-text-secondary">{duration.toFixed(1)}s</td>
               <td className="py-2 text-text-secondary">{event.channels.join(", ")}</td>
-              {showAttention && (
-                <td className="py-2">
-                  {topAttention.length > 0 ? (
-                    <div className="flex flex-wrap gap-1">
-                      {topAttention.map(([ch, weight]) => (
-                        <span key={ch} className="inline-flex items-center rounded-sm bg-elevated px-1.5 py-0.5 text-[10px] font-medium text-text-secondary border border-border">
-                          {ch}: {(weight * 100).toFixed(1)}%
-                        </span>
-                      ))}
-                    </div>
-                  ) : (
-                    <span className="text-text-muted">N/A</span>
-                  )}
-                </td>
-              )}
-              {gtEvents.length > 0 && (
-                <td className="py-2">
-                  {matchedGt ? (
-                    <span className="text-emerald-accent">yes</span>
-                  ) : (
-                    <span className="text-rose-accent">no</span>
-                  )}
-                </td>
-              )}
+              <td className="py-2">
+                {topAttention.length > 0 ? (
+                  <div className="flex flex-wrap gap-1">
+                    {topAttention.map(([ch, weight]) => (
+                      <span key={ch} className="inline-flex items-center rounded-sm bg-elevated px-1.5 py-0.5 text-[10px] font-medium text-text-secondary border border-border">
+                        {ch}: {(weight * 100).toFixed(1)}%
+                      </span>
+                    ))}
+                  </div>
+                ) : (
+                  <span className="text-text-muted">N/A</span>
+                )}
+              </td>
               <td className="py-2 text-right">
                 <button
                   onClick={() => onJump(event.startTime)}

@@ -9,7 +9,6 @@ interface TimelineBarProps {
   timeOffset: number;
   timeWindow: number;
   seizureEvents: SeizureEvent[];
-  groundTruthEvents: SeizureEvent[];
   onSeek: (time: number) => void;
 }
 
@@ -18,7 +17,6 @@ export function TimelineBar({
   timeOffset,
   timeWindow,
   seizureEvents,
-  groundTruthEvents,
   onSeek,
 }: TimelineBarProps) {
   const barRef = useRef<HTMLDivElement>(null);
@@ -51,18 +49,6 @@ export function TimelineBar({
             <div
               key={event.id}
               className="absolute top-0 h-full bg-amber-accent/30"
-              style={{ left: `${left}%`, width: `${Math.max(width, 0.3)}%` }}
-            />
-          );
-        })}
-
-        {groundTruthEvents.map((event) => {
-          const left = (event.startTime / durationSeconds) * 100;
-          const width = ((event.endTime - event.startTime) / durationSeconds) * 100;
-          return (
-            <div
-              key={event.id}
-              className="absolute top-1 h-1 rounded-full bg-text-primary/60"
               style={{ left: `${left}%`, width: `${Math.max(width, 0.3)}%` }}
             />
           );

@@ -11,7 +11,6 @@ interface ChannelCanvasProps {
   timeWindow: number;
   gain: number;
   seizureEvents: SeizureEvent[];
-  groundTruthEvents: SeizureEvent[];
   onTimeClick?: (time: number) => void;
 }
 
@@ -22,7 +21,6 @@ export function ChannelCanvas({
   timeWindow,
   gain,
   seizureEvents,
-  groundTruthEvents,
   onTimeClick,
 }: ChannelCanvasProps) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
@@ -54,7 +52,6 @@ export function ChannelCanvas({
 
     ctx.clearRect(0, 0, w, h);
 
-    // background
     ctx.fillStyle = "#ffffff";
     ctx.fillRect(0, 0, w, h);
 
@@ -89,7 +86,7 @@ export function ChannelCanvas({
       ctx.stroke();
     }
 
-    // seizure overlays (model predictions)
+    // seizure overlays
     for (const event of seizureEvents) {
       if (event.endTime < timeOffset || event.startTime > timeOffset + timeWindow) continue;
       const x1 = labelWidth + Math.max(0, (event.startTime - timeOffset) / timeWindow) * plotW;
@@ -101,30 +98,16 @@ export function ChannelCanvas({
       ctx.strokeRect(x1, 0, x2 - x1, h);
     }
 
-    // ground truth overlays
-    for (const event of groundTruthEvents) {
-      if (event.endTime < timeOffset || event.startTime > timeOffset + timeWindow) continue;
-      const x1 = labelWidth + Math.max(0, (event.startTime - timeOffset) / timeWindow) * plotW;
-      const x2 = labelWidth + Math.min(1, (event.endTime - timeOffset) / timeWindow) * plotW;
-      ctx.strokeStyle = "rgba(15, 23, 42, 0.6)";
-      ctx.lineWidth = 2;
-      ctx.setLineDash([4, 4]);
-      ctx.strokeRect(x1, 2, x2 - x1, h - 4);
-      ctx.setLineDash([]);
-    }
-
     // draw waveforms
     visible.forEach((channel, idx) => {
       const yCenter = idx * channelHeight + channelHeight / 2;
       const color = CHANNEL_COLORS[channels.indexOf(channel) % CHANNEL_COLORS.length];
 
-      // label
       ctx.fillStyle = "#475569";
       ctx.font = "11px var(--font-jetbrains-mono), monospace";
       ctx.textAlign = "right";
       ctx.fillText(channel.label, labelWidth - 8, yCenter + 4);
 
-      // waveform
       const startSample = Math.floor(timeOffset * channel.sampleRate);
       const endSample = Math.ceil((timeOffset + timeWindow) * channel.sampleRate);
       const totalSamples = endSample - startSample;
@@ -151,7 +134,7 @@ export function ChannelCanvas({
       }
       ctx.stroke();
     });
-  }, [channels, visibleChannels, timeOffset, timeWindow, gain, seizureEvents, groundTruthEvents]);
+  }, [channels, visibleChannels, timeOffset, timeWindow, gain, seizureEvents]);
 
   useEffect(() => {
     draw();
