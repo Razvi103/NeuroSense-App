@@ -5,8 +5,7 @@ const API_BASE = typeof window === "undefined"
   ? `${process.env.BACKEND_URL || "http://127.0.0.1:8000"}/api`
   : "/api";
 
-// Helper to clean messy EDF channel names
-function normalizeChannelName(rawLabel: string): string {
+export function normalizeChannelName(rawLabel: string): string {
   // Remove common prefixes/suffixes
   let clean = rawLabel.toUpperCase()
     .replace("EEG ", "")
