@@ -6,7 +6,6 @@ from httpx import AsyncClient
 
 
 def make_minimal_edf(num_signals=1, duration=1, sample_rate=256):
-    """Build a minimal valid EDF binary in memory."""
     num_records = duration
     samples_per_record = sample_rate
     header_bytes = 256 + num_signals * 256
@@ -26,7 +25,6 @@ def make_minimal_edf(num_signals=1, duration=1, sample_rate=256):
     header += pad("1", 8)
     header += pad(str(num_signals), 4)
 
-    # Signal headers
     for i in range(num_signals):
         header += pad(f"Ch{i+1}", 16)
     for _ in range(num_signals):

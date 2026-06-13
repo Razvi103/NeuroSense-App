@@ -1,5 +1,3 @@
-"""Dashboard stats endpoint."""
-
 from fastapi import APIRouter, Depends
 from pydantic import BaseModel
 from sqlalchemy import func, select

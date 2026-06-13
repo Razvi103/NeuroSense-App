@@ -1,5 +1,3 @@
-"""Async SQLite database setup via SQLAlchemy 2.0."""
-
 from collections.abc import AsyncGenerator
 from pathlib import Path
 
@@ -13,13 +11,11 @@ async_session = async_sessionmaker(engine, expire_on_commit=False)
 
 
 async def get_db() -> AsyncGenerator[AsyncSession, None]:
-    """FastAPI dependency that yields an async DB session."""
     async with async_session() as session:
         yield session
 
 
 async def init_db() -> None:
-    """Create all tables if they don't exist."""
     from app.db_models import Base
 
     db_path = settings.database_url.split("///")[-1]

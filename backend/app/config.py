@@ -17,19 +17,15 @@ class Settings(BaseSettings):
     upload_dir: Path = _BACKEND_DIR / "uploads"
     model_name: str = "labram_base_patch200_200"
 
-    # post-processing defaults
     t_high: float = 0.4
     t_low: float = 0.2
     smooth_window: int = 5
     min_duration: int = 5
 
-    # inference batching
     batch_size: int = 64
 
-    # database
     database_url: str = f"sqlite+aiosqlite:///{_BACKEND_DIR / 'data' / 'neurosense.db'}"
 
-    # CORS
     frontend_origin: str = "http://localhost:3000"
 
 

@@ -1,5 +1,3 @@
-"""EEG utilities: channel mapping, EDF parsing, and window preparation."""
-
 from pathlib import Path
 
 import numpy as np
@@ -38,7 +36,6 @@ CHANNEL_SETS = {
 
 
 def get_input_chans(ch_names: list[str]) -> list[int]:
-    """Map channel names to learned spatial embedding indices (0 = CLS token)."""
     input_chans = [0]
     for ch_name in ch_names:
         input_chans.append(STANDARD_1020.index(ch_name) + 1)
@@ -46,14 +43,6 @@ def get_input_chans(ch_names: list[str]) -> list[int]:
 
 
 def parse_edf(file_path: str | Path) -> tuple[np.ndarray, list[str], int]:
-    """Parse an EDF file and return (signals, channel_names, sample_rate).
-
-    Returns
-    -------
-    signals : ndarray of shape (n_channels, n_samples), float64
-    channel_names : list of channel label strings
-    sample_rate : int, samples per second (from the first signal)
-    """
     import pyedflib
 
     edf = pyedflib.EdfReader(str(file_path))
@@ -107,11 +96,6 @@ class EdfData:
 
 
 def parse_edf_full(file_path: str | Path) -> EdfData:
-    """Parse an EDF file returning full channel metadata for waveform display.
-
-    Unlike parse_edf(), this returns per-channel physical ranges and
-    recording metadata needed by the frontend viewer.
-    """
     import pyedflib
 
     edf = pyedflib.EdfReader(str(file_path))
@@ -155,7 +139,6 @@ def parse_edf_full(file_path: str | Path) -> EdfData:
 
 
 def _resample(signal: np.ndarray, from_rate: int, to_rate: int) -> np.ndarray:
-    """Resample a 1-D signal from from_rate to to_rate using polyphase filtering."""
     if from_rate == to_rate:
         return signal
     divisor = gcd(from_rate, to_rate)
@@ -172,22 +155,6 @@ def prepare_windows(
     stride_sec: int = 1,
     patch_size: int = 200,
 ) -> np.ndarray:
-    """Resample, scale, and slice EEG into overlapping windows.
-
-    Parameters
-    ----------
-    raw_eeg : (n_channels, n_samples)
-    sample_rate : original sample rate
-    target_rate : model's expected sample rate (200 Hz)
-    window_sec : window duration in seconds
-    stride_sec : stride in seconds
-    patch_size : temporal patch size for the model
-
-    Returns
-    -------
-    windows : ndarray of shape (n_windows, n_channels, n_patches, patch_size)
-        Ready for torch conversion and model input.
-    """
     n_channels, n_samples = raw_eeg.shape
 
     if sample_rate != target_rate:

@@ -1,8 +1,3 @@
-"""
-Integration test: full recording lifecycle from upload to waveform retrieval.
-Uses a mocked InferenceService so no GPU or checkpoint is needed.
-"""
-
 import struct
 from unittest.mock import MagicMock
 
@@ -14,7 +9,6 @@ from app.main import app
 
 
 def make_edf_file(num_channels=19, duration_seconds=30, sample_rate=200):
-    """Generate a synthetic EDF binary with the given parameters."""
     num_records = duration_seconds
     samples_per_record = sample_rate
     header_bytes = 256 + num_channels * 256
@@ -79,7 +73,6 @@ def make_edf_file(num_channels=19, duration_seconds=30, sample_rate=200):
 
 @pytest.fixture
 async def integration_client():
-    """Client with mocked inference service that returns synthetic seizure predictions."""
     mock_svc = MagicMock()
     mock_svc.model = True
     mock_svc.device = "cpu"
@@ -101,7 +94,6 @@ async def integration_client():
 async def test_full_recording_lifecycle(integration_client: AsyncClient):
     client = integration_client
 
-    # 1. Create patient
     patient_res = await client.post("/api/patients", json={
         "first_name": "Integration",
         "last_name": "Test",
@@ -112,7 +104,6 @@ async def test_full_recording_lifecycle(integration_client: AsyncClient):
     assert patient_res.status_code == 201
     patient_id = patient_res.json()["id"]
 
-    # 2. Upload synthetic EDF
     edf_bytes = make_edf_file(num_channels=19, duration_seconds=30, sample_rate=200)
     upload_res = await client.post(
         f"/api/recordings/upload?patient_id={patient_id}",
@@ -125,19 +116,16 @@ async def test_full_recording_lifecycle(integration_client: AsyncClient):
     status_res = await client.get(f"/api/recordings/{recording_id}/status")
     assert status_res.json()["status"] == "pending"
 
-    # 3. Trigger analysis
     analyze_res = await client.post(f"/api/recordings/{recording_id}/analyze")
     assert analyze_res.status_code == 200
     assert analyze_res.json()["status"] in ("analyzed", "no_seizures")
 
-    # 4. Retrieve results
     results_res = await client.get(f"/api/recordings/{recording_id}/results")
     assert results_res.status_code == 200
     results = results_res.json()
     assert "seizure_events" in results
     assert isinstance(results["seizure_events"], list)
 
-    # 5. Retrieve waveform
     waveform_res = await client.get(f"/api/recordings/{recording_id}/waveform")
     assert waveform_res.status_code == 200
     waveform = waveform_res.json()

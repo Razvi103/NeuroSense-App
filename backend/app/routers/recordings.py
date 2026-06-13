@@ -1,5 +1,3 @@
-"""Recordings list/filter router."""
-
 from typing import Optional
 
 from fastapi import APIRouter, Depends, HTTPException, Query

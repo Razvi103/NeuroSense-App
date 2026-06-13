@@ -1,6 +1,3 @@
-"""InferenceService: model loading and sliding-window EEG prediction."""
-
-import logging
 from pathlib import Path
 
 import numpy as np
@@ -16,11 +13,7 @@ from app.utils.eeg import (
     prepare_windows,
 )
 
-logger = logging.getLogger(__name__)
-
-
 class InferenceService:
-    """Holds the loaded model and runs inference on EDF recordings."""
 
     def __init__(self):
         self.model: AdversarialNeuralTransformer | None = None
@@ -33,13 +26,11 @@ class InferenceService:
         model_name: str = "labram_base_patch200_200",
         device: str = "auto",
     ) -> None:
-        """Create backbone, load checkpoint, wrap in AdversarialNeuralTransformer."""
         if device == "auto":
             self.device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
         else:
             self.device = torch.device(device)
 
-        logger.info("Creating backbone: %s", model_name)
         backbone = create_model(
             model_name,
             pretrained=False,
@@ -53,7 +44,6 @@ class InferenceService:
             init_values=0.1,
         )
 
-        logger.info("Loading checkpoint: %s", checkpoint_path)
         ckpt = torch.load(str(checkpoint_path), map_location="cpu", weights_only=False)
         state = ckpt["model"]
         clean_state = {k.replace("module.", ""): v for k, v in state.items()}
@@ -63,23 +53,19 @@ class InferenceService:
             if k.startswith("patient_discriminator") and k.endswith(".weight")
         ]
         num_patients = clean_state[disc_keys[-1]].shape[0]
-        logger.info("Auto-detected num_patients=%d", num_patients)
 
         model = AdversarialNeuralTransformer(
             backbone, num_patients=num_patients, adv_hidden_dim=512,
         )
 
         if "seizure_head.weight" in clean_state and "seizure_head.0.weight" not in clean_state:
-            logger.info("Detected old single-layer seizure head — adapting model")
             model.seizure_head = torch.nn.Linear(backbone.embed_dim, backbone.num_classes)
 
         model.load_state_dict(clean_state, strict=False)
         model.to(self.device).eval()
         self.model = model
-        logger.info("Model loaded on %s", self.device)
 
     def get_input_chans(self, channel_set: str) -> list[int]:
-        """Get (cached) input channel indices for a channel set name."""
         if channel_set not in self._input_chans_cache:
             ch_names = CHANNEL_SETS[channel_set]
             self._input_chans_cache[channel_set] = get_input_chans(ch_names)
@@ -91,13 +77,6 @@ class InferenceService:
         channel_set: str = "chbmit",
         batch_size: int = 64,
     ) -> tuple[np.ndarray, np.ndarray]:
-        """Run sliding-window inference on an EDF file.
-
-        Returns
-        -------
-        probs : ndarray of shape (n_windows,) — seizure probability per window
-        attn_weights : ndarray of shape (n_windows, n_channels) — per-channel attention
-        """
         if self.model is None:
             raise RuntimeError("Model not loaded. Call load_model() first.")
 

@@ -375,10 +375,6 @@ class NeuralTransformer(nn.Module):
         return x
 
 
-# ---------------------------------------------------------------------------
-#  Adversarial representation learning components
-# ---------------------------------------------------------------------------
-
 class GradientReversalFunction(torch.autograd.Function):
     @staticmethod
     def forward(ctx, x, lambda_):
@@ -568,10 +564,6 @@ class AdversarialNeuralTransformer(nn.Module):
 
         return seizure_logits, attn_weights
 
-
-# ---------------------------------------------------------------------------
-#  Model registry
-# ---------------------------------------------------------------------------
 
 @register_model
 def labram_base_patch200_200(pretrained=False, **kwargs):

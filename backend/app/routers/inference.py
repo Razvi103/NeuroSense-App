@@ -1,5 +1,3 @@
-"""Inference router: upload, analyze, and retrieve results."""
-
 import json
 import logging
 import uuid
@@ -51,7 +49,6 @@ async def upload_recording(
     patient_id: str = "",
     db: AsyncSession = Depends(get_db),
 ):
-    """Accept an EDF file upload, extract metadata, and persist to DB."""
     if not file.filename or not file.filename.lower().endswith(".edf"):
         raise HTTPException(status_code=400, detail="Only .edf files are accepted")
 
@@ -89,7 +86,6 @@ async def upload_recording(
     db.add(rec)
     await db.commit()
 
-    logger.info("Uploaded %s as recording %s", file.filename, recording_id)
     return UploadResponse(
         recording_id=recording_id,
         file_name=file.filename,
@@ -106,7 +102,6 @@ async def analyze_recording(
     body: AnalysisRequest | None = None,
     db: AsyncSession = Depends(get_db),
 ):
-    """Run inference + post-processing on an uploaded recording."""
     rec = await _get_recording_or_404(recording_id, db)
 
     rec.status = "analyzing"
@@ -146,7 +141,6 @@ async def analyze_recording(
             min_duration=body.min_duration if body.min_duration is not None else settings.min_duration,
         )
 
-    # Delete any previous events for this recording (re-analysis)
     old_events = await db.execute(
         select(SeizureEventRow).where(SeizureEventRow.recording_id == recording_id)
     )
@@ -186,10 +180,6 @@ async def analyze_recording(
     rec.seizure_count = len(seizure_events)
     await db.commit()
 
-    logger.info(
-        "Analysis complete for %s: %d events detected",
-        recording_id, len(seizure_events),
-    )
     return AnalysisResponse(
         recording_id=recording_id,
         status=status,
@@ -199,7 +189,6 @@ async def analyze_recording(
 
 @router.get("/{recording_id}/results", response_model=AnalysisResponse)
 async def get_results(recording_id: str, db: AsyncSession = Depends(get_db)):
-    """Retrieve analysis results for a previously analyzed recording."""
     rec = await _get_recording_or_404(recording_id, db)
 
     if rec.status not in ("analyzed", "no_seizures"):
@@ -234,7 +223,6 @@ async def get_results(recording_id: str, db: AsyncSession = Depends(get_db)):
 
 @router.get("/{recording_id}/status", response_model=RecordingStatus)
 async def get_status(recording_id: str, db: AsyncSession = Depends(get_db)):
-    """Check the current status of a recording."""
     rec = await _get_recording_or_404(recording_id, db)
     return RecordingStatus(recording_id=recording_id, status=rec.status)
 
@@ -246,7 +234,6 @@ async def get_waveform(
     duration: float | None = Query(default=None, gt=0, description="Duration in seconds (omit for full recording)"),
     db: AsyncSession = Depends(get_db),
 ):
-    """Return EEG channel waveform data for viewer display."""
     rec = await _get_recording_or_404(recording_id, db)
 
     try:

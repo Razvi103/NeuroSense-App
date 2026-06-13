@@ -1,5 +1,3 @@
-"""Patient CRUD router."""
-
 import uuid
 from datetime import datetime, timezone
 

@@ -1,5 +1,3 @@
-"""FastAPI application entry point."""
-
 import logging
 from contextlib import asynccontextmanager
 
@@ -24,7 +22,6 @@ logger = logging.getLogger(__name__)
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     await init_db()
-    logger.info("Database initialized")
 
     svc = InferenceService()
     if settings.checkpoint_path.exists():

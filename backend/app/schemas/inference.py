@@ -1,5 +1,3 @@
-"""Pydantic schemas for inference endpoints."""
-
 from typing import Literal, Optional
 
 from pydantic import BaseModel, Field

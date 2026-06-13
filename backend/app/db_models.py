@@ -1,5 +1,3 @@
-"""SQLAlchemy ORM models for patients, recordings, and seizure events."""
-
 from sqlalchemy import Float, ForeignKey, Integer, String, Text
 from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column
 

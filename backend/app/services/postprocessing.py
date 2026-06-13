@@ -1,6 +1,3 @@
-"""Post-processing pipelines for raw seizure probabilities."""
-
-import logging
 from pathlib import Path
 
 import numpy as np
@@ -9,11 +6,8 @@ import torch
 
 from app.models.scorenet import ScoreNet, build_toeplitz, hard_constraints
 
-logger = logging.getLogger(__name__)
-
 
 def get_events(binary_arr: np.ndarray) -> list[tuple[int, int]]:
-    """Find start and end indices of contiguous '1' blocks."""
     if len(binary_arr) == 0:
         return []
 
@@ -32,10 +26,6 @@ def post_process_probs(
     smooth_window: int = 5,
     min_duration: int = 5,
 ) -> np.ndarray:
-    """Temporal smoothing, dual-thresholding, and minimum-duration filtering.
-
-    Returns binary prediction array of same length as probs.
-    """
     if smooth_window > 1:
         probs_smooth = (
             pd.Series(probs)
@@ -71,7 +61,6 @@ def post_process_probs(
 
 
 def load_scorenet(path: str | Path, device: torch.device) -> ScoreNet:
-    """Load a trained ScoreNet from a checkpoint file."""
     model = ScoreNet()
     state = torch.load(str(path), map_location="cpu", weights_only=False)
     if "model_state_dict" in state:
@@ -79,7 +68,6 @@ def load_scorenet(path: str | Path, device: torch.device) -> ScoreNet:
     else:
         model.load_state_dict(state)
     model.to(device).eval()
-    logger.info("ScoreNet loaded from %s", path)
     return model
 
 
@@ -90,13 +78,6 @@ def scorenet_postprocess(
     threshold: float = 0.5,
     min_dur_sec: int = 10,
 ) -> tuple[np.ndarray, np.ndarray]:
-    """Run ScoreNet refinement on raw probabilities.
-
-    Returns
-    -------
-    preds : binary prediction array
-    refined_probs : refined probability array from ScoreNet
-    """
     Z = build_toeplitz(probs.astype(np.float32), model.w)
     Z_tensor = torch.from_numpy(Z).to(device)
 
