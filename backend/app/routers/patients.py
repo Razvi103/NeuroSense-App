@@ -40,7 +40,7 @@ async def list_patients(db: AsyncSession = Depends(get_db)):
 async def get_patient(patient_id: str, db: AsyncSession = Depends(get_db)):
     patient = await db.get(PatientRow, patient_id)
     if not patient:
-        raise HTTPException(status_code=404, detail="Patient not found")
+        raise HTTPException(status_code=404)
     return PatientOut.model_validate(patient)
 
 
@@ -52,7 +52,7 @@ async def update_patient(
 ):
     patient = await db.get(PatientRow, patient_id)
     if not patient:
-        raise HTTPException(status_code=404, detail="Patient not found")
+        raise HTTPException(status_code=404)
 
     updates = body.model_dump(exclude_unset=True)
     for field, value in updates.items():
@@ -67,6 +67,6 @@ async def update_patient(
 async def delete_patient(patient_id: str, db: AsyncSession = Depends(get_db)):
     patient = await db.get(PatientRow, patient_id)
     if not patient:
-        raise HTTPException(status_code=404, detail="Patient not found")
+        raise HTTPException(status_code=404)
     await db.delete(patient)
     await db.commit()

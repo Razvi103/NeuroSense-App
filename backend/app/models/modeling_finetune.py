@@ -400,9 +400,7 @@ class GradientReversalLayer(nn.Module):
 
 class ChannelAttention(nn.Module):
     """
-    Learns per-channel importance weights from transformer patch tokens.
-    Input:  patch tokens (B, N_channels * N_time, D)
-    Output: attention-weighted pooled representation (B, D) and weights (B, N_channels)
+    learns per-channel importance weights from transformer patch tokens.
     """
     def __init__(self, embed_dim, reduction=4):
         super().__init__()
@@ -441,14 +439,7 @@ class PatientDiscriminator(nn.Module):
 
 class AdversarialNeuralTransformer(nn.Module):
     """
-    Wraps a pre-trained NeuralTransformer backbone with:
-    - Channel attention (replaces default mean pooling)
-    - Gradient reversal layer + patient discriminator
-    - Optional multi-layer adversarial heads via forward hooks
-
-    During training: returns (seizure_logits, patient_logits[, aux_patient_logits])
-    During eval (.forward): returns seizure_logits only
-    Use .predict() for inference to also get channel attention weights.
+    used to wrap a NeuralTransformer backbone with channel attention, GRL and patient discriminator and optional multi-layer adversaria heads
     """
 
     def __init__(self, backbone, num_patients, adv_hidden_dim=256,
@@ -549,7 +540,6 @@ class AdversarialNeuralTransformer(nn.Module):
         return seizure_logits
 
     def predict(self, x, input_chans=None):
-        """Inference-only: returns (seizure_logits, channel_attention_weights)."""
         batch_size, n_channels, n_time, patch_size = x.shape
 
         patch_tokens = self.backbone.forward_features(

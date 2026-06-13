@@ -34,7 +34,7 @@ async def _get_recording_or_404(
 ) -> RecordingRow:
     rec = await db.get(RecordingRow, recording_id)
     if not rec:
-        raise HTTPException(status_code=404, detail="Recording not found")
+        raise HTTPException(status_code=404, detail="recording not found")
     return rec
 
 
@@ -181,7 +181,7 @@ async def get_results(recording_id: str, db: AsyncSession = Depends(get_db)):
     if rec.status not in ("analyzed", "no_seizures"):
         raise HTTPException(
             status_code=409,
-            detail=f"Recording status is '{rec.status}'. Run /analyze first.",
+            detail="recording status is not analyzed or no_seizures"
         )
 
     result = await db.execute(
@@ -217,8 +217,8 @@ async def get_status(recording_id: str, db: AsyncSession = Depends(get_db)):
 @router.get("/{recording_id}/waveform", response_model=WaveformResponse)
 async def get_waveform(
     recording_id: str,
-    start: float = Query(default=0.0, ge=0, description="Start time in seconds"),
-    duration: float | None = Query(default=None, gt=0, description="Duration in seconds (omit for full recording)"),
+    start: float = Query(default=0.0, ge=0),
+    duration: float | None = Query(default=None, gt=0),
     db: AsyncSession = Depends(get_db),
 ):
     rec = await _get_recording_or_404(recording_id, db)

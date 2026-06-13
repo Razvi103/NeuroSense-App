@@ -1,6 +1,6 @@
 from typing import Literal, Optional
 
-from pydantic import BaseModel, Field
+from pydantic import BaseModel
 
 
 class AnalysisRequest(BaseModel):
@@ -12,13 +12,11 @@ class AnalysisRequest(BaseModel):
 
 
 class SeizureEventOut(BaseModel):
-    id: str = Field(description="Unique event identifier")
-    start_time: int = Field(description="Event start in seconds from recording start")
-    end_time: int = Field(description="Event end in seconds from recording start")
-    channels: list[str] = Field(description="Channel names used for detection")
-    channel_attention: dict[str, float] = Field(
-        description="Per-channel attention weight (mean over event windows)"
-    )
+    id: str
+    start_time: int
+    end_time: int
+    channels: list[str]
+    channel_attention: dict[str, float]
 
 
 class AnalysisResponse(BaseModel):

@@ -27,5 +27,5 @@ async def list_recordings(
 async def get_recording(recording_id: str, db: AsyncSession = Depends(get_db)):
     rec = await db.get(RecordingRow, recording_id)
     if not rec:
-        raise HTTPException(status_code=404, detail="Recording not found")
+        raise HTTPException(status_code=404)
     return RecordingOut.model_validate(rec)
