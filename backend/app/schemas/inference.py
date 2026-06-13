@@ -5,13 +5,10 @@ from pydantic import BaseModel, Field
 
 class AnalysisRequest(BaseModel):
     channel_set: Optional[Literal["chbmit", "tusz"]] = None
-    postprocessing: Literal["hand_tuned", "scorenet"] = "hand_tuned"
     t_high: Optional[float] = None
     t_low: Optional[float] = None
     smooth_window: Optional[int] = None
     min_duration: Optional[int] = None
-    scorenet_threshold: float = 0.5
-    scorenet_min_dur: int = 10
 
 
 class SeizureEventOut(BaseModel):

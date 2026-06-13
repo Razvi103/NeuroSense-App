@@ -1,5 +1,5 @@
 from pathlib import Path
-from typing import Literal, Optional
+from typing import Literal
 
 from pydantic_settings import BaseSettings
 
@@ -11,7 +11,6 @@ class Settings(BaseSettings):
     model_config = {"env_prefix": "NEUROSENSE_"}
 
     checkpoint_path: Path = _BACKEND_DIR / "checkpoints" / "checkpoint-best.pth"
-    scorenet_path: Optional[Path] = None
     device: Literal["auto", "cpu", "cuda"] = "auto"
     channel_set: Literal["chbmit", "tusz"] = "chbmit"
     upload_dir: Path = _BACKEND_DIR / "uploads"

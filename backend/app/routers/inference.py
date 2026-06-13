@@ -21,12 +21,7 @@ from app.schemas.inference import (
     UploadResponse,
     WaveformResponse,
 )
-from app.services.postprocessing import (
-    get_events,
-    load_scorenet,
-    post_process_probs,
-    scorenet_postprocess,
-)
+from app.services.postprocessing import get_events, post_process_probs
 from app.utils.eeg import CHANNEL_SETS, parse_edf_full
 
 logger = logging.getLogger(__name__)
@@ -125,21 +120,13 @@ async def analyze_recording(
         logger.exception("Inference failed for %s", recording_id)
         raise HTTPException(status_code=500, detail=f"Inference failed: {e}")
 
-    if body.postprocessing == "scorenet" and settings.scorenet_path:
-        sn_model = load_scorenet(settings.scorenet_path, inference_svc.device)
-        preds, _ = scorenet_postprocess(
-            probs, sn_model, inference_svc.device,
-            threshold=body.scorenet_threshold,
-            min_dur_sec=body.scorenet_min_dur,
-        )
-    else:
-        preds = post_process_probs(
-            probs,
-            t_high=body.t_high if body.t_high is not None else settings.t_high,
-            t_low=body.t_low if body.t_low is not None else settings.t_low,
-            smooth_window=body.smooth_window if body.smooth_window is not None else settings.smooth_window,
-            min_duration=body.min_duration if body.min_duration is not None else settings.min_duration,
-        )
+    preds = post_process_probs(
+        probs,
+        t_high=body.t_high if body.t_high is not None else settings.t_high,
+        t_low=body.t_low if body.t_low is not None else settings.t_low,
+        smooth_window=body.smooth_window if body.smooth_window is not None else settings.smooth_window,
+        min_duration=body.min_duration if body.min_duration is not None else settings.min_duration,
+    )
 
     old_events = await db.execute(
         select(SeizureEventRow).where(SeizureEventRow.recording_id == recording_id)

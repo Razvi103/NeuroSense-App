@@ -1,10 +1,5 @@
-from pathlib import Path
-
 import numpy as np
 import pandas as pd
-import torch
-
-from app.models.scorenet import ScoreNet, build_toeplitz, hard_constraints
 
 
 def get_events(binary_arr: np.ndarray) -> list[tuple[int, int]]:
@@ -58,34 +53,3 @@ def post_process_probs(
             final_preds[s:e] = 0
 
     return final_preds
-
-
-def load_scorenet(path: str | Path, device: torch.device) -> ScoreNet:
-    model = ScoreNet()
-    state = torch.load(str(path), map_location="cpu", weights_only=False)
-    if "model_state_dict" in state:
-        model.load_state_dict(state["model_state_dict"])
-    else:
-        model.load_state_dict(state)
-    model.to(device).eval()
-    return model
-
-
-def scorenet_postprocess(
-    probs: np.ndarray,
-    model: ScoreNet,
-    device: torch.device,
-    threshold: float = 0.5,
-    min_dur_sec: int = 10,
-) -> tuple[np.ndarray, np.ndarray]:
-    Z = build_toeplitz(probs.astype(np.float32), model.w)
-    Z_tensor = torch.from_numpy(Z).to(device)
-
-    with torch.no_grad():
-        refined = model(Z_tensor, n_samples=[len(probs)])
-
-    refined_probs = refined.cpu().numpy()
-    preds = (refined_probs >= threshold).astype(int)
-    preds = hard_constraints(preds, min_dur_sec=min_dur_sec)
-
-    return preds, refined_probs
