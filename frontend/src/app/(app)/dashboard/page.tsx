@@ -42,7 +42,6 @@ export default async function DashboardPage() {
 
   return (
     <div className="space-y-8 relative">
-      {/* Decorative background element */}
       <div className="absolute -top-10 -right-10 w-96 h-96 bg-brand-blue/5 rounded-full blur-3xl pointer-events-none" />
       
       <div className="flex items-center justify-between relative z-10">

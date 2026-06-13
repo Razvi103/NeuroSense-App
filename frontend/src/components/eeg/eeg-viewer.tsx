@@ -55,7 +55,6 @@ export function EegViewer({
   return (
     <div className="flex h-full gap-0">
       <div className="flex flex-1 flex-col min-w-0">
-        {/* recording header */}
         <div className="flex items-center justify-between border-b border-border bg-surface px-5 py-3">
           <div className="flex items-center gap-4">
             <div>
@@ -87,7 +86,6 @@ export function EegViewer({
           </div>
         </div>
 
-        {/* eeg canvas area */}
         <div className="flex-1 min-h-[400px]">
           <ChannelCanvas
             channels={eegData.channels}
@@ -100,7 +98,6 @@ export function EegViewer({
           />
         </div>
 
-        {/* timeline */}
         <div className="border-t border-border bg-surface px-5 py-3">
           <TimelineBar
             durationSeconds={eegData.durationSeconds}
@@ -111,7 +108,6 @@ export function EegViewer({
           />
         </div>
 
-        {/* events panel */}
         <div className="border-t border-border bg-surface">
           <div className="flex border-b border-border">
             <span className="px-4 py-2.5 text-xs font-medium font-heading text-text-primary border-b-2 border-text-primary">
@@ -124,7 +120,6 @@ export function EegViewer({
         </div>
       </div>
 
-      {/* controls sidebar */}
       {controlsOpen && (
         <div className="w-56 shrink-0 border-l border-border bg-surface p-4 overflow-y-auto">
           <ViewerControls

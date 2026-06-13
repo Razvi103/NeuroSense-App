@@ -55,7 +55,6 @@ export function ChannelCanvas({
     ctx.fillStyle = "#ffffff";
     ctx.fillRect(0, 0, w, h);
 
-    // time gridlines
     const secondsPerGrid = timeWindow <= 10 ? 1 : timeWindow <= 30 ? 2 : 5;
     const startSecond = Math.ceil(timeOffset / secondsPerGrid) * secondsPerGrid;
 
@@ -76,7 +75,6 @@ export function ChannelCanvas({
       ctx.fillText(`${t.toFixed(0)}s`, x, h - 4);
     }
 
-    // channel separator lines
     ctx.strokeStyle = "rgba(226, 232, 240, 0.5)";
     for (let i = 1; i < numChannels; i++) {
       const y = i * channelHeight;
@@ -86,7 +84,6 @@ export function ChannelCanvas({
       ctx.stroke();
     }
 
-    // seizure overlays
     for (const event of seizureEvents) {
       if (event.endTime < timeOffset || event.startTime > timeOffset + timeWindow) continue;
       const x1 = labelWidth + Math.max(0, (event.startTime - timeOffset) / timeWindow) * plotW;
@@ -98,7 +95,6 @@ export function ChannelCanvas({
       ctx.strokeRect(x1, 0, x2 - x1, h);
     }
 
-    // draw waveforms
     visible.forEach((channel, idx) => {
       const yCenter = idx * channelHeight + channelHeight / 2;
       const color = CHANNEL_COLORS[channels.indexOf(channel) % CHANNEL_COLORS.length];
