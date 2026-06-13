@@ -6,15 +6,12 @@ const API_BASE = typeof window === "undefined"
   : "/api";
 
 export function normalizeChannelName(rawLabel: string): string {
-  // Remove common prefixes/suffixes
   let clean = rawLabel.toUpperCase()
     .replace("EEG ", "")
     .replace("-LE", "")
     .replace("-REF", "")
     .trim();
   
-  // Fix casing to match our standard 19-channel 10-20 system
-  // e.g. "FP1" -> "Fp1", "FZ" -> "Fz"
   if (clean === "FP1") return "Fp1";
   if (clean === "FP2") return "Fp2";
   if (clean === "FZ") return "Fz";
@@ -25,7 +22,6 @@ export function normalizeChannelName(rawLabel: string): string {
   return clean;
 }
 
-// Convert backend snake_case to frontend camelCase
 function mapPatient(p: any): Patient {
   return {
     id: p.id,
