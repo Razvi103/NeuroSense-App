@@ -23,19 +23,3 @@ export const GAIN_PRESETS = [
   { label: "50x", value: 50 },
   { label: "100x", value: 100 },
 ] as const;
-
-export const EEG_BANDS = {
-  delta: { min: 0.5, max: 4 },
-  theta: { min: 4, max: 8 },
-  alpha: { min: 8, max: 13 },
-  beta: { min: 13, max: 30 },
-  gamma: { min: 30, max: 100 },
-} as const;
-
-export const DEFAULT_SAMPLE_RATE = 256;
-
-export const CONFIDENCE_COLORS = {
-  low: "#10b981",
-  medium: "#f59e0b",
-  high: "#f43f5e",
-} as const;

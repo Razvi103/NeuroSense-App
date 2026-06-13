@@ -20,14 +20,6 @@ export function Card({ className, hover, children, ...props }: CardProps) {
   );
 }
 
-export function CardHeader({ className, children, ...props }: HTMLAttributes<HTMLDivElement>) {
-  return (
-    <div className={cn("mb-4", className)} {...props}>
-      {children}
-    </div>
-  );
-}
-
 export function CardTitle({ className, children, ...props }: HTMLAttributes<HTMLHeadingElement>) {
   return (
     <h3
@@ -36,13 +28,5 @@ export function CardTitle({ className, children, ...props }: HTMLAttributes<HTML
     >
       {children}
     </h3>
-  );
-}
-
-export function CardDescription({ className, children, ...props }: HTMLAttributes<HTMLParagraphElement>) {
-  return (
-    <p className={cn("text-sm text-text-secondary mt-1", className)} {...props}>
-      {children}
-    </p>
   );
 }
