@@ -1,0 +1,67 @@
+@import "tailwindcss";
+
+@theme {
+  --color-base: #f8fafc;
+  --color-surface: #ffffff;
+  --color-card: #ffffff;
+  --color-elevated: #f1f5f9;
+
+  --color-cyan-accent: #0f172a;
+  --color-cyan-deep: #000000;
+  --color-cyan-muted: #64748b;
+
+  --color-amber-accent: #d97706;
+  --color-rose-accent: #e11d48;
+  --color-emerald-accent: #059669;
+
+  --color-text-primary: #0f172a;
+  --color-text-secondary: #475569;
+  --color-text-muted: #64748b;
+
+  --color-border: #e2e8f0;
+  --color-border-subtle: #f1f5f9;
+
+  --color-brand-blue: #0693e3;
+  --color-brand-teal: #24b4c9;
+  --color-brand-blue-surface: #f0f7fb;
+  --color-brand-blue-dark: #024b75;
+
+  --font-heading: var(--font-outfit);
+  --font-body: var(--font-dm-sans);
+  --font-mono: var(--font-jetbrains-mono);
+}
+
+:root {
+  --color-base: #f8fafc;
+  --color-surface: #ffffff;
+  --color-text-primary: #0f172a;
+  color-scheme: light;
+}
+
+* {
+  scrollbar-width: thin;
+  scrollbar-color: var(--color-border) transparent;
+}
+
+body {
+  background: var(--color-base);
+  color: var(--color-text-primary);
+  font-family: var(--font-body), system-ui, sans-serif;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-heading), system-ui, sans-serif;
+}
+
+::selection {
+  background: var(--color-text-primary);
+  color: var(--color-surface);
+}
+
+input:-webkit-autofill,
+input:-webkit-autofill:hover,
+input:-webkit-autofill:focus {
+  -webkit-text-fill-color: var(--color-text-primary);
+  -webkit-box-shadow: 0 0 0px 1000px var(--color-surface) inset;
+  transition: background-color 5000s ease-in-out 0s;
+}

@@ -1,0 +1,26 @@
+services:
+  backend:
+    build: ./backend
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./backend/uploads:/app/uploads
+      - ./backend/checkpoints:/app/checkpoints
+      - backend-db:/app/data
+
+  frontend:
+    build:
+      context: ./frontend
+      args:
+        BACKEND_URL: http://backend:8000
+        NEXT_PUBLIC_AUTH_AZURE_AD_CLIENT_ID: ${NEXT_PUBLIC_AUTH_AZURE_AD_CLIENT_ID}
+        NEXT_PUBLIC_AUTH_AZURE_AD_TENANT_ID: ${NEXT_PUBLIC_AUTH_AZURE_AD_TENANT_ID}
+    ports:
+      - "3000:3000"
+    environment:
+      - BACKEND_URL=http://backend:8000
+    depends_on:
+      - backend
+
+volumes:
+  backend-db:
