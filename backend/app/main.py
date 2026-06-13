@@ -31,11 +31,7 @@ async def lifespan(app: FastAPI):
             device=settings.device,
         )
     else:
-        logger.warning(
-            "Checkpoint not found at %s — model will NOT be available. "
-            "Place your checkpoint file there and restart.",
-            settings.checkpoint_path,
-        )
+        logger.warning("checkpoint not found at %s", settings.checkpoint_path)
     app.state.inference_service = svc
     yield
 

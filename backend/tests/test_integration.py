@@ -61,7 +61,6 @@ def make_edf_file(num_channels=19, duration_seconds=30, sample_rate=200):
     for rec in range(num_records):
         for ch in range(num_channels):
             for s in range(samples_per_record):
-                # Simulate a seizure-like burst in seconds 10-15
                 if 10 <= rec < 15:
                     value = int(16000 * np.sin(2 * np.pi * 14 * s / samples_per_record))
                 else:
@@ -78,9 +77,9 @@ async def integration_client():
     mock_svc.device = "cpu"
 
     n_windows = 30
-    n_channels = 23  # chbmit channel count
+    n_channels = 23
     probs = np.zeros(n_windows)
-    probs[10:15] = 0.9  # simulate seizure at windows 10-14
+    probs[10:15] = 0.9
     attn = np.random.rand(n_windows, n_channels).astype(np.float32)
     mock_svc.predict_recording.return_value = (probs, attn)
 

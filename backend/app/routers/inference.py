@@ -64,7 +64,7 @@ async def upload_recording(
         channel_count = len(edf.channels)
         sample_rate = edf.sample_rate
     except Exception:
-        logger.warning("Could not extract EDF metadata for %s", recording_id)
+        logger.warning("edf metadata extraction failed for %s", recording_id)
 
     rec = RecordingRow(
         id=recording_id,
@@ -117,7 +117,7 @@ async def analyze_recording(
     except Exception as e:
         rec.status = "error"
         await db.commit()
-        logger.exception("Inference failed for %s", recording_id)
+        logger.exception("inference failed for %s", recording_id)
         raise HTTPException(status_code=500, detail=f"Inference failed: {e}")
 
     preds = post_process_probs(
@@ -226,7 +226,7 @@ async def get_waveform(
     try:
         edf = parse_edf_full(rec.file_path)
     except Exception as e:
-        logger.exception("Failed to parse EDF for %s", recording_id)
+        logger.exception("failed to parse edf for %s", recording_id)
         raise HTTPException(status_code=500, detail=f"Failed to read EDF: {e}")
 
     start_sample = int(start * edf.sample_rate)

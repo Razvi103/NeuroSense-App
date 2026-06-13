@@ -52,8 +52,6 @@ def parse_edf(file_path: str | Path) -> tuple[np.ndarray, list[str], int]:
         n_samples = edf.getNSamples()
         sample_rates = [int(edf.getSampleFrequency(i)) for i in range(n_channels)]
 
-        # Keep only EEG channels (same sample count as the first real signal),
-        # filtering out annotation/status channels with different lengths.
         primary_n = n_samples[0]
         primary_rate = sample_rates[0]
 
